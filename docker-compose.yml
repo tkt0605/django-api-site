@@ -1,0 +1,13 @@
+services:
+  backend:
+    build: 
+      context: .
+      dockerfile: Dockerfile.backend
+    container_name: backend
+    command: gunicorn --build 0.0.0.0:8000 config.wsgi:application
+    volumes:
+      - ./backend:/django
+    ports:
+      - 8000:8000
+    
+    

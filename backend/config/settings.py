@@ -80,7 +80,12 @@ WSGI_APPLICATION = 'config.wsgi.application'
 
 DATABASES = {
     'default': {
-        
+        "USER": "takato",
+        "PASSWORD": "20050605",
+        "NAME": "bookstore",
+        "HOST": "db",
+        "PORT": "3306",
+
     }
 }
 

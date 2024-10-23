@@ -1,7 +1,7 @@
 services: 
   backend:
     build: 
-      context: ./
+      context: ./backend
       dockerfile: dockerfile
     container_name: django
     ports:
@@ -21,14 +21,17 @@ services:
       - DATABASE_USER=takato
       - DATABASE_PASSWORD=0605
     depends_on:
-      - db
+      db:
+        condition: service_healthy
     networks:
       - django-api-site
   frontend:
-    build: ./frontend
+    build:
+      context: ./frontend
+      dockerfile: dockerfile
     command: npm run serve
     volumes:
-      - ./frontend:/app
+      - ./frontend/libra-front:/libra-front
     ports:
       - "8080:8080"
 

@@ -8,7 +8,7 @@ services:
       - "8000:8000"
     env_file:
       - .env
-    command: gunicorn config.wsgi.application --bind 0.0.0.0:8000
+    command: gunicorn config.wsgi:application --bind 0.0.0.0:8000 --timeout 120 --workers 3
     volumes:
       - ./backend:/backend
     environment:
@@ -29,11 +29,14 @@ services:
     build:
       context: ./frontend
       dockerfile: dockerfile
+    container_name: frontend
     command: npm run serve
     volumes:
       - ./frontend/libra-front:/libra-front
     ports:
       - "8080:8080"
+    networks:
+      - django-api-site
 
   db:
     image: mysql:8.0
@@ -47,7 +50,7 @@ services:
       - MYSQL_PASSWORD=0605
     volumes:
       - mysql_data:/var/lib/mysql
-      - ./init.sql:docker-entrypoint-initdb.d/init.sql
+      - /datebase/init.sql:/docker-entrypoint-initdb.d/init.sql:ro
     healthcheck:
       test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
       interval: 1m30s
@@ -58,13 +61,14 @@ services:
       - django-api-site
   nginx:
     image: nginx:latest
-    container_name: nginx
+    container_name: nginx_server
     ports:
       - "80:80"
     volumes:
       - ./nginx/nginx.conf:/etc/nginx/nginx.conf
     depends_on:
       - backend
+      - frontend
     networks:
       - django-api-site
 volumes:

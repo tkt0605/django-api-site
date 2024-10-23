@@ -1,0 +1,10 @@
+FROM node:18-alpine
+
+WORKDIR /libra-front
+
+COPY package*.json /libra-front/
+RUN npm install 
+
+COPY . /libra-front
+
+CMD [ "npm", "run", "serve" ]

@@ -1,0 +1,65 @@
+services: 
+  backend:
+    build: 
+      context: .
+      dockerfile: Dockerfile
+    container_name: django
+    ports:
+      - "8000:8000"
+    env_file:
+      - .env
+    command: gunicorn config.wsgi.application --bind 0.0.0.0:8000
+    volumes:
+      - ./backend/config:/config
+    environment:
+      - DJANGO_SETTINGS_MODULE=config.settings
+      ## ローカル環境時のホスト
+      - DJANGO_ALLOWED_HOSTS=localhost 127.0.0.1 
+      - DATABASE_URL=mysql://takato:0605@db:3306/books
+      - DATABASE_HOST=db localhost
+      - DATABASE_NAME=books
+      - DATABASE_USER=takato
+      - DATABASE_PASSWORD=0605
+    depends_on:
+      - db
+    networks:
+      - django-api-site
+  frontend:
+  db:
+    image: mysql:8.0
+    container_name:  db
+    ports:
+      - "3306:3306"
+    environment:
+      - MYSQL_ROOT_PASSWORD=20050605
+      - MYSQL_DATABASE=books
+      - MYSQL_USER=takato
+      - MYSQL_PASSWORD=0605
+    volumes:
+      - mysql_data:/var/lib/mysql
+      - ./init.sql:docker-entrypoint-initdb.d/init.sql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      interval: 1m30s
+      timeout: 30s
+      retries: 5
+      start_period: 30s
+    networks:
+      - django-api-site
+
+  nginx:
+    image: nginx:latest
+    container_name: nginx
+    ports:
+      - "80:80"
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf
+    depends_on:
+      - backend
+    networks:
+      - django-api-site
+volumes:
+  mysql_data:
+networks:
+  django-api-site:
+    driver: bridge

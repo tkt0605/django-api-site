@@ -5,16 +5,16 @@ from django.contrib.auth import get_user_model
 
 class CustomUserAdmin(BaseUserAdmin):
     model = CustomUser
-    list_display = ('email', 'username', 'is_staff', 'is_active')
+    list_display = ['email', 'username', 'is_staff', 'is_active']
     list_filter = ('is_staff', 'is_active')
 
     fieldsets = (
         (None, {
-            "fields": ("email", "username")
+            "fields": ("email", "password")
             }
         ),
         ('Permisstion Info', {
-            "fields": ("username")
+            "fields": ("username", )
             }
         ),
         ("Permisstions", {
@@ -35,7 +35,7 @@ class CustomUserAdmin(BaseUserAdmin):
     )
     search_fields = ("email", "username")
     ordering = ("email", )
-    filter_horizontal = ('groups', 'user_permission',)
+    filter_horizontal = ('groups', 'user_permissions',)
 admin.site.register(CustomUser, CustomUserAdmin)
 
 

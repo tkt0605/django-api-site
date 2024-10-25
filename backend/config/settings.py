@@ -32,8 +32,8 @@ ALLOWED_HOSTS = ["localhost"]
 
 INSTALLED_APPS = [
     'libra',
-    # 'rest_framework',
-    # 'corsheaders',
+    'rest_framework',
+    'corsheaders',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -80,6 +80,7 @@ WSGI_APPLICATION = 'config.wsgi.application'
 
 DATABASES = {
     'default': {
+        "ENGINE": "django.db.backends.mysql",
         "USER": "takato",
         "PASSWORD": "20050605",
         "NAME": "bookstore",

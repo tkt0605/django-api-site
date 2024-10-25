@@ -78,19 +78,18 @@ WSGI_APPLICATION = 'config.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/5.0/ref/settings/#databases
 
+
+
 DATABASES = {
     'default': {
-        "ENGINE": "django.db.backends.mysql",
-        "USER": "takato",
-        "PASSWORD": "20050605",
-        "NAME": "bookstore",
-        "HOST": "db",
-        "PORT": "3306",
-
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME': 'bookstore',
+        'USER': 'takato',
+        'PASSWORD': '0605',
+        'HOST': 'db',  # MySQL コンテナのホスト名（docker-compose のサービス名）
+        'PORT': '3306',
     }
 }
-
-
 # Password validation
 # https://docs.djangoproject.com/en/5.0/ref/settings/#auth-password-validators
 

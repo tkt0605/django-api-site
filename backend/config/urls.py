@@ -18,11 +18,17 @@ from django.contrib import admin
 from django.urls import path, include
 from django.conf import settings
 from django.conf.urls.static import static
+# from rest_framework import routers
+from libra import views
+from accounts import views
+
+# router =  routers.DefaultRouter()
+# router.register(r'accounts', views.UserDetailsView)
 urlpatterns = [
     path('admin/', admin.site.urls),
     # path('', include("libra.urls")),
     path('accounts/', include('allauth.urls')),
-    path('api/user/', include('accounts.urls')), 
+    # path('api/', include(router.urls)), 
     path("api/auth/", include('dj_rest_auth.urls')),
     path('api/auth/registration/', include('dj_rest_auth.registration.urls')),
 ]

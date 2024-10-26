@@ -25,14 +25,13 @@ SECRET_KEY = 'django-insecure-eya)b9v_e$x4&=r@99f@nk&*=w@-u!ohs9xgqb^*&==xp3_2wi
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
 
-ALLOWED_HOSTS = ["localhost", "localhost:8000"]
+ALLOWED_HOSTS = ["*"]
 
 
 # Application definition
 
 INSTALLED_APPS = [
     'libra',
-    'rest_framework',
     'corsheaders',
     'accounts',
     'django.contrib.admin',
@@ -47,6 +46,7 @@ INSTALLED_APPS = [
     'allauth.account',
     'allauth.socialaccount',
     ## django-allauth-rest
+    'rest_framework',
     'rest_framework.authtoken',  # Token認証用
     'dj_rest_auth.registration',
     'dj_rest_auth',  # REST API経由の認証
@@ -77,7 +77,8 @@ REST_FRAMEWORK = {
 REST_AUTH_SERIALIZERS = {
     'USER_DETAILS_SERIALIZER': 'libra.serializers.CustomUserDetailsSerializer',
 }
-CORS_ALLOW_ALL_ORIGINS = True
+CORS_ORIGINS_ALLOW_ALL = True
+CORS_ALLOW_CREDENTIALS = True
 ROOT_URLCONF = 'config.urls'
 
 TEMPLATES = [

@@ -13,7 +13,7 @@ services:
       - ./backend:/backend
       - ./backend/staticfiles:/backend/staticfiles
     environment:
-      - SECRET_KEY=django-insecure-eya)b9v_e$x4&=r@99f@nk&*=w@-u!ohs9xgqb^*&==xp3_2wi
+      # - SECRET_KEY=django-insecure-eya)b9v_e$x4&=r@99f@nk&*=w@-u!ohs9xgqb^*&==xp3_2wi
       - DJANGO_SETTINGS_MODULE=config.settings
       ## ローカル環境時のホスト
       - DJANGO_ALLOWED_HOSTS=localhost 127.0.0.1 

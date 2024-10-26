@@ -26,12 +26,18 @@ class CustomUserAdmin(BaseUserAdmin):
             }
         )
     )
+    # add_fieldsets = (
+    #     (None, {
+    #         "classes": ("wide", ),
+    #         "fields": ("email", "username", "password1", "password2", "is_staff", "is_active")
+    #         }
+    #     )
+    # )
     add_fieldsets = (
         (None, {
-            "classes": ("wide", ),
-            "fields": ("email", "username", "password1", "password2", "is_staff", "is_active")
-            }
-        )
+            "classes": ("wide",),
+            "fields": ("email", "username", "password1", "password2", "is_staff", "is_active"),
+        }),
     )
     search_fields = ("email", "username")
     ordering = ("email", )

@@ -11,6 +11,7 @@ services:
     command: gunicorn config.wsgi:application --bind 0.0.0.0:8000 --timeout 120 --workers 3
     volumes:
       - ./backend:/backend
+      - ./backend/staticfiles:/backend/staticfiles
     environment:
       - DJANGO_SETTINGS_MODULE=config.settings
       ## ローカル環境時のホスト

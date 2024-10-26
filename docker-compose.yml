@@ -69,6 +69,7 @@ services:
     volumes:
       - ./nginx/nginx.conf:/etc/nginx/nginx.conf
       - ./backend/staticfiles:/backend/staticfiles
+      - ./frontend/libra-front/dist:/usr/share/nginx/html 
     depends_on:
       - backend
       - frontend

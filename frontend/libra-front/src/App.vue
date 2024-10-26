@@ -1,26 +1,161 @@
 <template>
-  <img alt="Vue logo" src="./assets/logo.png">
-  <HelloWorld msg="Welcome to Your Vue.js App"/>
+  <div id='app'>
+    <header>
+      <div class='headline'>
+        <div class="logo"><b>Libra</b></div> 
+        <form class="search-form">
+          <input type="text" placeholder="本を検索..." class="search-input"/>
+          <button type="submit" class="search-button">🔍</button>
+        </form>
+        <nav> 
+          <ul class="head">
+            <li class="home"><router-link to="/">Home</router-link></li>
+            <li class="detail"><router-link to="/about/">About</router-link></li>
+            <li class="profile"><router-link to="#">MyName</router-link></li>
+          </ul>
+        </nav>
+      </div>
+    </header>
+    <main>
+      <router-view />  <!-- ここにルーティングの内容が表示される -->
+    </main>
+    <footer>
+      <p>&copy; 2024 Libra </p>
+    </footer>
+  </div>
 </template>
 
 <script>
-import HelloWorld from './components/HelloWorld.vue'
-
+// import HelloWorld from './components/HelloWorld.vue'
 export default {
   name: 'App',
-  components: {
-    HelloWorld
-  }
 }
 </script>
 
 <style>
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
+/* リセットCSS */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'Arial', sans-serif;
 }
+
+/* ページ全体の背景 */
+body {
+  background-color: #f5f5f5;
+  color: #333;
+  line-height: 1.6;
+}
+
+/* アプリ全体のスタイル */
+#app {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+/* ヘッダーのデザイン */
+header {
+  background-color: #4a90e2;
+  padding: 15px 30px;
+  color: white;
+}
+
+.headline {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+/* ロゴのスタイル */
+.logo {
+  font-size: 24px;
+  font-weight: bold;
+  letter-spacing: 2px;
+}
+.search-input{
+  padding: 8px 12px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 16px;
+  width: 200px;
+  margin-left: 100px;
+  transition: width 0.3s ease;
+}
+.search-input:focus {
+  width: 500px;
+  border-color: #4a90e2;
+  outline: none;
+}
+.search-button{
+  background-color: #4a90e2;
+  color: white;
+  border: none;
+  padding: 8px 12px;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.search-button:hover {
+  background-color: #63a7f5;
+}
+/* ナビゲーションスタイル */
+nav ul {
+  list-style: none;
+  display: flex;
+  gap: 15px;
+}
+
+nav ul li {
+  display: inline;
+}
+
+nav a {
+  color: white;
+  text-decoration: none;
+  font-weight: 500;
+  font-size: 18px;
+  transition: color 0.3s;
+}
+
+nav a:hover {
+  color: #e0e0e0;
+}
+
+/* メインコンテンツエリア */
+main {
+  flex: 1;
+  padding: 30px;
+  margin: 20px;
+  border-radius: 8px;
+}
+
+/* フッターのスタイル */
+footer {
+  background-color: #4a90e2;
+  color: white;
+  text-align: center;
+  padding: 10px 0;
+  font-size: 14px;
+}
+
+/* レスポンシブ対応 */
+@media (max-width: 768px) {
+  .headline {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  nav ul {
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  main {
+    margin: 10px;
+  }
+}
+
 </style>

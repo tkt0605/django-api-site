@@ -11,7 +11,7 @@
           <ul class="head">
             <li class="home"><router-link to="/">Home</router-link></li>
             <li class="detail"><router-link to="/about/">About</router-link></li>
-            <li class="profile"><router-link to="#">MyName</router-link></li>
+            <li class="profile"><router-link to="/profile">MyName</router-link></li>
           </ul>
         </nav>
       </div>
@@ -26,9 +26,10 @@
 </template>
 
 <script>
-// import HelloWorld from './components/HelloWorld.vue'
+// import IndexHome from './components/Index.vue';
 export default {
   name: 'App',
+
 }
 </script>
 

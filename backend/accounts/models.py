@@ -35,7 +35,7 @@ class CustomUser(AbstractUser, PermissionsMixin):
     def __str__(self):
         return self.email
     @property 
-    def profole(self):
+    def profile(self):
         return Account.objects.get_or_create(user=self)[0]
 class Account(models.Model):
     email = models.OneToOneField(CustomUser, on_delete=models.CASCADE, related_name='Emailアドレス', blank=True, null=True, default='')
@@ -45,3 +45,5 @@ class Account(models.Model):
     created_at = models.DateTimeField(default=timezone.now)
     def __str__(self):
         return self.name
+    class Meta:
+        verbose_name_plural = 'Account'

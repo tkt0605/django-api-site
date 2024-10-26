@@ -25,7 +25,7 @@ SECRET_KEY = 'django-insecure-eya)b9v_e$x4&=r@99f@nk&*=w@-u!ohs9xgqb^*&==xp3_2wi
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
 
-ALLOWED_HOSTS = ["localhost"]
+ALLOWED_HOSTS = ["localhost", "localhost:8000"]
 
 
 # Application definition
@@ -74,7 +74,9 @@ REST_FRAMEWORK = {
         'rest_framework.authentication.TokenAuthentication',
     ],
 }
-
+REST_AUTH_SERIALIZERS = {
+    'USER_DETAILS_SERIALIZER': 'libra.serializers.CustomUserDetailsSerializer',
+}
 CORS_ALLOW_ALL_ORIGINS = True
 ROOT_URLCONF = 'config.urls'
 
@@ -148,7 +150,9 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 STATIC_ROOT = os.path.join(BASE_DIR, "staticfiles")  # collectstatic で収集される場所
-
+STATICFILES_DIRS = [
+    os.path.join(BASE_DIR, 'static'),  # /backend/static/
+]
 # 開発中の静的ファイルを配置する場所
 MEDIA_URL = 'media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, "media")

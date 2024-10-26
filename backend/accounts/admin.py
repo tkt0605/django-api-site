@@ -18,7 +18,7 @@ class CustomUserAdmin(BaseUserAdmin):
             }
         ),
         ("Permisstions", {
-            "fields": ('is_staff', 'is_active')
+            "fields": ('is_staff', 'is_active', 'is_superuser', 'groups', 'user_permissions')
             }
         ),
         ("Importants Date", {

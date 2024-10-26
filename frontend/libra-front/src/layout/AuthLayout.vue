@@ -1,10 +1,11 @@
 <template>
-    <div id="accounts">
+    <div id="app">
         <h1>Libra</h1>
+        <router-view /> 
     </div>
 </template>
 <script>
 export default {
-    name: "AuthLAyout",
+    name: "AuthLayout",
 };
 </script>

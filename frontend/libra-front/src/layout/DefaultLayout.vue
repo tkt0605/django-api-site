@@ -28,7 +28,7 @@
   <script>
   // import IndexHome from './components/Index.vue';
   export default {
-    name: 'App',
+    name: 'DefaultLayout',
     // components: {
     //   IndexHome
     // }

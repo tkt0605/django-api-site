@@ -29,7 +29,9 @@
 // import IndexHome from './components/Index.vue';
 export default {
   name: 'App',
-
+  // components: {
+  //   IndexHome
+  // }
 }
 </script>
 

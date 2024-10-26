@@ -1,5 +1,12 @@
 <template>
     <div>
-        <h1>Hello World</h1>
+      <h2>Welcome to Home Page</h2>
     </div>
-</template>
+  </template>
+  
+  <script>
+  export default {
+    name: 'HomeIndex',  // 名前を変更
+  };
+  </script>
+  

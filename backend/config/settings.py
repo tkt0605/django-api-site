@@ -23,7 +23,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-eya)b9v_e$x4&=r@99f@nk&*=w@-u!ohs9xgqb^*&==xp3_2wi'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
 ALLOWED_HOSTS = ["*"]
 
@@ -151,9 +151,9 @@ CORS_ALLOW_ALL_ORIGINS = True
 
 STATIC_URL = '/static/'
 STATIC_ROOT = os.path.join(BASE_DIR, "staticfiles")  # collectstatic で収集される場所
-STATICFILES_DIRS = [
-    os.path.join(BASE_DIR, 'frontend/dist')
-]
+# STATICFILES_DIRS = [
+#     os.path.join(BASE_DIR, 'frontend/dist')
+# ]
 # 開発中の静的ファイルを配置する場所
 MEDIA_URL = 'media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, "media")

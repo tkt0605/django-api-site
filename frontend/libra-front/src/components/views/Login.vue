@@ -15,6 +15,7 @@
 </template>
 
 <script>
+// import axios from 'axios';
 export default {
   name: 'UserLogin',  // 名前を変更
   data() {
@@ -27,7 +28,7 @@ export default {
   methods: {
     async login(){
       try{
-        const response = await fetch('http://localhost:8000/api/auth/login', {
+        const response = await fetch('http://localhost:8000/auth/login', {
           method: 'POST',
           headers: {"Content-Type": "application/json"},
           body: JSON.stringify({
@@ -49,6 +50,9 @@ export default {
       }
     }
   },
+  // mounted() {
+  //   axios POST('http')
+  // }
 };
 </script>
 <style>

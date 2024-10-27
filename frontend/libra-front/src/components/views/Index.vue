@@ -1,14 +1,15 @@
 <template>
-    <div>
-      <h2>API Message</h2>
-      <p v-if="message">{{message}}</p>
-    </div>
-  </template>
+  <div>
+    <h2>API Message</h2>
+    <p v-if="message">{{message}}</p>   
+  </div>
+</template>
   
-  <script>
+<script>
 import axios from 'axios';
 
 export default {
+  // name: 'ルーター名'を入れないと、index.jsでのrouterを取得できませんでした。
   name: "HomeIndex",
   data() {
     return {
@@ -16,7 +17,7 @@ export default {
     };
   },
   mounted() {
-    axios.get('http://localhost:8001/api/hello/')
+    axios.get('http://localhost:8000/api/hello/')
       .then(response => {
         this.message = response.data.message;  // APIからのメッセージを代入
       })
@@ -25,6 +26,5 @@ export default {
       });
   },
 };
-
-  </script>
+</script>
   

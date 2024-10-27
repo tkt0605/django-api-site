@@ -19,22 +19,19 @@ from django.urls import path, include
 from django.conf import settings
 from django.conf.urls.static import static
 # from rest_framework import routers
-from libra import views
-from accounts import views
+from libra import views as libra_views
+from accounts import views as accpunts_views
+from rest_framework import routers
 
-# router =  routers.DefaultRouter()
-# router.register(r'accounts', views.UserDetailsView)
+router = routers.DefaultRouter()
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('api/', include("libra.urls")),
-    path('api/accounts/', include('allauth.urls')),
-    # path('api/', include(router.urls)), 
-    path("api/auth/", include('dj_rest_auth.urls')),
-    path('api/auth/registration/', include('dj_rest_auth.registration.urls')),
+    path("auth/", include('dj_rest_auth.urls')),
+    path('auth/registration/', include('dj_rest_auth.registration.urls')),
+    path("api/", include(router.urls))
 ]
 
 if settings.DEBUG:
-    # urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
-    urlpatterns += static(settings.STATICFILES_DIRS,document_root=settings.STATIC_ROOT)
-if settings.DEBUG:
+    urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

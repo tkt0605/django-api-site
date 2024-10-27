@@ -145,14 +145,14 @@ USE_I18N = True
 
 USE_TZ = True
 
-# CORS_ALLOW_ALL_ORIGINS = True
+CORS_ALLOW_ALL_ORIGINS = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.0/howto/static-files/
 
 STATIC_URL = '/static/'
 STATIC_ROOT = os.path.join(BASE_DIR, "staticfiles")  # collectstatic で収集される場所
 STATICFILES_DIRS = [
-    os.path.join(BASE_DIR, 'static'),  # /backend/static/
+    os.path.join(BASE_DIR, 'frontend/dist')
 ]
 # 開発中の静的ファイルを配置する場所
 MEDIA_URL = 'media/'

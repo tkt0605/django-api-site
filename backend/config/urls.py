@@ -26,8 +26,8 @@ from accounts import views
 # router.register(r'accounts', views.UserDetailsView)
 urlpatterns = [
     path('admin/', admin.site.urls),
-    # path('', include("libra.urls")),
-    path('accounts/', include('allauth.urls')),
+    path('api/', include("libra.urls")),
+    path('api/accounts/', include('allauth.urls')),
     # path('api/', include(router.urls)), 
     path("api/auth/", include('dj_rest_auth.urls')),
     path('api/auth/registration/', include('dj_rest_auth.registration.urls')),

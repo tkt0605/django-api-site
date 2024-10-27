@@ -5,7 +5,7 @@ services:
       dockerfile: dockerfile
     container_name: django
     ports:
-      - "8000:8000"
+      - "8001:8000"
     env_file:
       - .env
     command: gunicorn config.wsgi:application --bind 0.0.0.0:8000 --timeout 120 --workers 3
@@ -34,7 +34,7 @@ services:
     container_name: frontend
     command: npm run serve
     volumes:
-      - ./frontend/libra-front:/libra-front
+      - ./frontend/libra-front:/backend/libra-front
     ports:
       - "8080:8080"
     networks:

@@ -18,8 +18,10 @@ const routes = [
         path: '/accounts',
         component: AuthLayout, // ログイン専用レイアウト
         children: [
-          { path: 'login', name: 'Login', component: UserLogin },
-          { path: 'register', name: 'Register', component: UserRegister}
+            { path: '/:pathMatch(.*)*', redirect: '/accounts/login'},
+            { path: '', redirect: '/accounts/login',},
+            { path: 'login', name: 'Login', component: UserLogin },
+            { path: 'register', name: 'Register', component: UserRegister}
         ],
       },
 ];

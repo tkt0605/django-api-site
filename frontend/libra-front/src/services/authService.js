@@ -1,29 +1,67 @@
 import axios from "axios";
+// function getCSRFToken() {
+//     const value = `; ${document.cookie}`;
+//     const parts = value.split(`; csrftoken=`);
+//     if (parts.length === 2) return parts.pop().split(';').shift();
+// }
 function getCSRFToken() {
-    const value = `; ${document.cookie}`;
-    const parts = value.split(`; csrftoken=`);
-    if (parts.length === 2) return parts.pop().split(';').shift();
+  const cookies = document.cookie.split(';');
+  for (let cookie of cookies) {
+    const [name, value] = cookie.trim().split('=');
+    if (name === 'csrftoken') return value;
+  }
+  return '';
 }
 export async function  login(email, password) {
     try {
+        const csrfToken = getCSRFToken();
         const response = await axios.post('http://localhost:8000/api/auth/login/', 
             {email, password},
             {
                 headers: {
                     'Content-Type': "application/json",
-                    'X-CSRFToken': getCSRFToken(),
+                    'X-CSRFToken': csrfToken,
                 },
                 withCredentials: true,
             },
         );
         console.log("Login Success: ", response.data);
-        return response.data;
+        console.log('Login Response:', response.data);  // レスポンスを確認
+        if (response.data && response.data.key) {
+          return response.data;
+        } else {
+          throw new Error('Tokenが見つかりません。レスポンスを確認してください。')
+        }
     } catch (error) {
-        console.error("Login Error: ", error.response);
+        console.error("Login Error: ", error.response || error.message);
         throw error
     }
 }
-
+export async function register(email, username, password1, password2) {
+  try{
+    const csrfToken = getCSRFToken();
+    const response = await axios.post('http://localhost:8000/api/auth/login/', 
+      {email, username, password1, password2},
+      {
+        headers: {
+          "Content-Type": "application/json",
+          'X-CSRFToken': csrfToken,
+        },
+        withCredentials: true,
+      },
+    );
+    console.log('Register Success: ', response.data);
+    console.log("Register Response: ", response.data);
+    if (response.data && response.data.access && response.key) {
+      return response.data && response.key;
+    } else{
+      throw new Error("Tokenが見つかりません。レスポンスを確認してください。");
+    }
+  } catch(error) {
+    console.error("Register Error: ", error.response || error.message);
+    throw error
+  }
+}
 
 export async function refreshToken() {
   try {
@@ -44,14 +82,15 @@ export async function refreshToken() {
     throw error;
   }
 }
-export async function HelloWorld() {
+export async function HelloWorld(message) {
   try {
+    const csrfToken = getCSRFToken();
     const response = await axios.get("http://localhost:8000/api/hello/", 
       {message},
       {
         headers: {
           'Content-Type': "application/json",
-          'X-CSRFToken': getCSRFToken(),
+          'X-CSRFToken': csrfToken,
         },
         withCredentials: true,
       },
@@ -59,7 +98,7 @@ export async function HelloWorld() {
     console.log('APIの認証: ', response.data);
     return response.data;
   } catch(error) {
-    console.error("APIの接続に失敗しました。", error.response);
+    console.error("APIの接続に失敗しました。", error.response || error.message);
     throw error;
   }
 }

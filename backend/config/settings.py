@@ -84,10 +84,17 @@ REST_AUTH_SERIALIZERS = {
 SIMPLE_JWT = {
     'AUTH_HEADER_TYPES': ('Bearer',),
 }
-CORS_ORIGINS_ALLOW_ALL = True
-CORS_ALLOW_CREDENTIALS = True
+# CORS_ORIGINS_ALLOW_ALL = True
 ROOT_URLCONF = 'config.urls'
+CORS_ALLOWED_ORIGINS = [
+    "http://localhost:8080",  # フロントエンドのURL
+]
 
+CSRF_TRUSTED_ORIGINS = [
+    "http://localhost:8080",
+]
+
+CORS_ALLOW_CREDENTIALS = True  # Cookieを許可する
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',

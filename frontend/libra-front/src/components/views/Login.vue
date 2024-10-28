@@ -29,27 +29,20 @@ export default {
   },
   methods: {
     async login() {
-      // try {
-      //   const response = await axios.post("http://localhost:8000/api/auth/login/", {
-      //     username: this.email,
-      //     password: this.password,
-      //   });
-      //   localStorage.setItem('token', response.data.access);
-      //   localStorage.setItem('refresh_token', response.data.refresh)
-      //   this.$router.push("/"); 
-      // } catch(error) {
-      //   console.error(error);
-      //   alert('ログインに失敗しました。');
-      // }
       try {
         const response = await login(this.email, this.password);
-        console.log("Login Success:", response);
-        localStorage.setItem('token', response.data.access);
-        localStorage.setItem('refresh_token', response.data.refresh);
-        this.$router.push('/');
-      } catch(error) {
-        console.error(error);
-        this.errorMessage = 'ログインに失敗しました。';
+        console.log('Login Success:', response);
+        if (response && response.key) {
+          localStorage.setItem('authToken', response.key);
+          console.log("Token saved:", localStorage.getItem('authToken', response.key))
+          this.$router.push('/');
+        } else{
+          throw new Error('Tokenが見つかりません。');
+        }
+      } catch (error){
+        console.error('Login Error:', error.message || error);
+        // Vueの状態にエラーメッセージを設定
+        this.errorMessage = error.response?.data?.detail || 'ログインに失敗しました。';
       }
     },
   },

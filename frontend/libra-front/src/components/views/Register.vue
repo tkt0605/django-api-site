@@ -10,13 +10,16 @@
       </form>
       <div class="other-page">
         <p>アカウントをお持ちの場合。<router-link to="/accounts/login">ログイン</router-link></p>
+        <p v-if="errorMessage">{{ errorMessage }}</p>
       </div>
     </div>
   </template>
   
   <script>
+import { register } from '@/services/authService';
+
 // import router from '@/router';
-import axios from 'axios';
+// import axios from 'axios';
 export default {
   name: 'UserRegister',  // 名前を変更
   data() {
@@ -25,25 +28,27 @@ export default {
       username: '',
       password1: '',
       password2: '',
+      errorMessage: ''
     };
   },
   methods: {
     async register() {
       try {
-        const response = await axios.post("http://localhost:8000/api/auth/registration/", {
-          email: this.email,
-          username: this.username,
-          password1: this.password1,
-          password2: this.password2,
-        });
-        localStorage.setItem('token', response.data.access);
-        this.$router.push('/');
-      } catch (error){
-        console.error(error);
-        alert('登録に失敗しました。');
+        const response = await register(this.email, this.username, this.password1, this.password2);
+        console.log('Register Success: ', response);
+        if (response.key) {
+          localStorage.setItem('authToken', response.key);
+          console.log("Token saved:", localStorage.getItem('authToken', response.key))
+          this.$router.push('login/');
+        } else{
+          throw new Error("登録できませんでした。");
+        }
+      }catch(error){
+        console.error("Login Error: ", error.response || error.message);
+        throw error
       }
-    },
-  },
+    }
+  }
 };
 </script>
 

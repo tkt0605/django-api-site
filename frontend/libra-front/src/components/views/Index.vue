@@ -6,7 +6,7 @@
 </template>
   
 <script>
-import axios from 'axios';
+// import axios from 'axios';
 import { HelloWorld } from '@/services/authService';
 export default {
   // name: 'ルーター名'を入れないと、index.jsでのrouterを取得できませんでした。
@@ -17,7 +17,7 @@ export default {
     };
   },
   methods: {
-    async fetchMessage() {
+    async HelloWorld() {
       try{
         const data = await HelloWorld();
         this.message = data.message;

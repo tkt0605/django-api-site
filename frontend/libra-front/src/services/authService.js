@@ -82,6 +82,26 @@ export async function refreshToken() {
     throw error;
   }
 }
+export async function logout() {
+  try {
+    const response = await axios.post("http://localhost:8000/api/auth/logout/", 
+      {},
+      {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Token ${localStorage.getItem('authToken')}`,
+        },
+        withCredentials: true,
+      },
+    );
+    console.log("Logout Success: ", response.data);
+    localStorage.removeItem("authToken");
+    localStorage.removeItem("refresh_token");
+  } catch(error){
+    console.log("Logout Error: ", error.response || error.message);
+    throw error;
+  }
+}
 export async function HelloWorld(message) {
   try {
     const csrfToken = getCSRFToken();

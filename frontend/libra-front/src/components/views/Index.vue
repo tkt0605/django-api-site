@@ -2,6 +2,7 @@
   <div>
     <h2>API Message</h2>
     <p v-if="message">{{message}}</p>   
+    <RouterLink to="/accounts/logout">Logout</RouterLink>
   </div>
 </template>
   

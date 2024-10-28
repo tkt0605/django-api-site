@@ -4,6 +4,7 @@ import UserRegister from '@/components/views/Register.vue';
 import HomeIndex from "@/components/views/Index.vue";
 import AccountProfile from "@/components/views/Account.vue";
 import AuthLayout from "@/components/layout/AuthLayout.vue";
+import UserLogout from "@/components/views/Logout.vue";
 import DefaultLayout from "@/components/layout/DefaultLayout.vue";
 const routes = [
     {
@@ -21,7 +22,8 @@ const routes = [
             { path: '/:pathMatch(.*)*', redirect: '/accounts/login'},
             { path: '', redirect: '/accounts/login',},
             { path: 'login', name: 'Login', component: UserLogin },
-            { path: 'register', name: 'Register', component: UserRegister}
+            { path: 'register', name: 'Register', component: UserRegister},
+            { path: "logout", name: "Logout", component: UserLogout}
         ],
       },
 ];

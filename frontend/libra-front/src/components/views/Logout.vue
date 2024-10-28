@@ -18,6 +18,7 @@ export default {
         async handleLogout() {
             try{
                 await logout();
+                
                 this.$router.push('login/');
             }catch (error){
                 console.error('Logout Error:', error.message || error);

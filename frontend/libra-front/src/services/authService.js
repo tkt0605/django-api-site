@@ -1,17 +1,27 @@
 import axios from "axios";
+// import { getCSRFToken } from './getCSRFToken';
 // function getCSRFToken() {
-//     const value = `; ${document.cookie}`;
-//     const parts = value.split(`; csrftoken=`);
-//     if (parts.length === 2) return parts.pop().split(';').shift();
+//   const cookies = document.cookie.split(';');
+//   for (let cookie of cookies) {
+//     const [name, value] = cookie.trim().split('=');
+//     if (name === 'csrftoken') return value;
+//   }
+//   return '';
 // }
+
 function getCSRFToken() {
-  const cookies = document.cookie.split(';');
-  for (let cookie of cookies) {
-    const [name, value] = cookie.trim().split('=');
-    if (name === 'csrftoken') return value;
+  const csrfToken = document.cookie
+    .split('; ')
+    .find((row) => row.startsWith('csrftoken='))
+    ?.split('=')[1];
+
+  if (!csrfToken) {
+    console.warn('CSRFトークンが見つかりません。');
   }
-  return '';
+  return csrfToken || '';
 }
+
+
 export async function  login(email, password) {
     try {
         const csrfToken = getCSRFToken();
@@ -69,26 +79,26 @@ export async function refreshToken() {
       refresh: localStorage.getItem('refresh_token'),
     });
 
-    // 新しいアクセストークンを保存
-    localStorage.setItem('token', response.data.access);
-    return response.data.access;
+    const newAccessToken = response.data.access;
+    localStorage.setItem('authToken', newAccessToken);
+    console.log('トークンが正常にリフレッシュされました:', newAccessToken);
+    return newAccessToken;
   } catch (error) {
-    console.error('トークンのリフレッシュに失敗しました:', error);
-    
-    // トークンが無効な場合、ログアウト処理
-    localStorage.removeItem('token');
-    localStorage.removeItem('refresh_token');
-    window.location.href = '/login';  // ログイン画面にリダイレクト
+    console.error('トークンのリフレッシュに失敗しました:', error.response || error.message);
     throw error;
   }
 }
+
+
 export async function logout() {
   try {
+    const csrfToken = getCSRFToken();
     const response = await axios.post("http://localhost:8000/api/auth/logout/", 
       {},
       {
         headers: {
           "Content-Type": "application/json",
+          'X-CSRFToken': csrfToken,
           Authorization: `Token ${localStorage.getItem('authToken')}`,
         },
         withCredentials: true,

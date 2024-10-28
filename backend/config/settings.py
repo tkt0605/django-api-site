@@ -81,9 +81,15 @@ REST_AUTH_SERIALIZERS = {
 }
 
 
+
 SIMPLE_JWT = {
     'AUTH_HEADER_TYPES': ('Bearer',),
+    'ACCESS_TOKEN_LIFETIME': timedelta(minutes=5),
+    'REFRESH_TOKEN_LIFETIME': timedelta(days=1),
+    'ROTATE_REFRESH_TOKENS': True,
+    'BLACKLIST_AFTER_ROTATION': True,
 }
+
 # CORS_ORIGINS_ALLOW_ALL = True
 ROOT_URLCONF = 'config.urls'
 CORS_ALLOWED_ORIGINS = [
@@ -93,7 +99,8 @@ CORS_ALLOWED_ORIGINS = [
 CSRF_TRUSTED_ORIGINS = [
     "http://localhost:8080",
 ]
-
+SESSION_COOKIE_SECURE = False  # ローカル開発環境の場合
+CSRF_COOKIE_SECURE = False  # ローカル開発環境の場合
 CORS_ALLOW_CREDENTIALS = True  # Cookieを許可する
 TEMPLATES = [
     {

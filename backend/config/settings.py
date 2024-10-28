@@ -50,6 +50,7 @@ INSTALLED_APPS = [
     'rest_framework.authtoken',  # Token認証用
     'dj_rest_auth.registration',
     'dj_rest_auth',  # REST API経由の認証
+    # 'mysqlclient',
 ]
 SITE_ID = 1
 

@@ -2,7 +2,7 @@ from django.db import models
 from django.contrib.auth.models import AbstractUser, BaseUserManager, Permission, Group, PermissionsMixin
 from django.utils import timezone
 from django.conf import settings
-
+from rest_framework.authtoken.models import Token
 class CustomUserManager(BaseUserManager):
     def create_user(self, email, username, password):
         if not email:
@@ -37,6 +37,9 @@ class CustomUser(AbstractUser, PermissionsMixin):
     @property 
     def profile(self):
         return Account.objects.get_or_create(user=self)[0]
+    @property
+    def token(self):
+        return Token.objects.get_or_create(user=self)[0]
 class Account(models.Model):
     email = models.OneToOneField(CustomUser, on_delete=models.CASCADE, related_name='Emailアドレス', blank=True, null=True, default='')
     name = models.CharField(max_length=75, verbose_name='ユーザー名', blank=True, null=True, default='')

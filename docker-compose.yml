@@ -14,14 +14,14 @@ services:
       - ./backend/staticfiles:/backend/staticfiles
     environment:
       # - SECRET_KEY=django-insecure-eya)b9v_e$x4&=r@99f@nk&*=w@-u!ohs9xgqb^*&==xp3_2wi
-      - DJANGO_SETTINGS_MODULE=config.settings
+      DJANGO_SETTINGS_MODULE: config.settings
       ## ローカル環境時のホスト
-      - DJANGO_ALLOWED_HOSTS=localhost 127.0.0.1 
-      - DATABASE_URL=mysql://takato:0605@db:3306/bookstore
-      - DATABASE_HOST=db localhost
-      - DATABASE_NAME=bookstore
-      - DATABASE_USER=takato
-      - DATABASE_PASSWORD=0605
+      DJANGO_ALLOWED_HOSTS: localhost
+      DATABASE_URL: mysql://takato:0605@db:3306/bookstore
+      DATABASE_HOST: db
+      DATABASE_NAME: bookstore
+      DATABASE_USER: takato
+      DATABASE_PASSWORD: 0605
     depends_on:
       db:
         condition: service_healthy
@@ -52,7 +52,7 @@ services:
       MYSQL_PASSWORD: 0605
     volumes:
       - mysql_data:/var/lib/mysql
-      - /datebase/init.sql:/docker-entrypoint-initdb.d/init.sql:ro
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql:ro
     healthcheck:
       test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
       interval: 1m30s

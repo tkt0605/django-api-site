@@ -28,7 +28,7 @@ export default {
     };
   },
   methods: {
-    async HeaderLogin() {
+    async login() {
       // try {
       //   const response = await axios.post("http://localhost:8000/api/auth/login/", {
       //     username: this.email,
@@ -43,7 +43,7 @@ export default {
       // }
       try {
         const response = await login(this.email, this.password);
-        console.logs("Login Success:", response);
+        console.log("Login Success:", response);
         localStorage.setItem('token', response.data.access);
         localStorage.setItem('refresh_token', response.data.refresh);
         this.$router.push('/');

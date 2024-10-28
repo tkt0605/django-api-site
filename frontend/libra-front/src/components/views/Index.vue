@@ -26,15 +26,12 @@ export default {
           this.message = '認証トークンが見つかりません。ログインしてください。'
           return
         }
-
         const response = await axios.get('http://localhost:8000/api/hello/', {
           headers: {
-            //　トークンの自動送信で認証トークンの有無を調べる。
+            //トークンの自動送信で認証トークンの有無を調べる。
             Authorization: `Bearer ${token}`,
-
           },
         });
-        console.log(response.data);
         this.message = response.data.message;
       } catch (error) {
         console.error(error.response ? error.response.message: error.message);

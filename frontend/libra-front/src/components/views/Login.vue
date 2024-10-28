@@ -10,33 +10,46 @@
     </form>
     <div class="'other-page'">
       <p>アカウントをお持ちでない場合<RouterLink to="/accounts/register">サインアップ</RouterLink></p>
+      <p v-if="errorMessage">{{ errorMessage }}</p>
     </div>
   </div>
 </template>
 
 <script>
-import axios from 'axios';
+// import axios from 'axios';
+import {login} from '@/services/authService'
 export default {
   name: 'UserLogin',  // 名前を変更
   data() {
     return {
       email: '',
       password: '',
-      message: '',
+      errorMessage: '',
     };
   },
   methods: {
-    async login() {
+    async HeaderLogin() {
+      // try {
+      //   const response = await axios.post("http://localhost:8000/api/auth/login/", {
+      //     username: this.email,
+      //     password: this.password,
+      //   });
+      //   localStorage.setItem('token', response.data.access);
+      //   localStorage.setItem('refresh_token', response.data.refresh)
+      //   this.$router.push("/"); 
+      // } catch(error) {
+      //   console.error(error);
+      //   alert('ログインに失敗しました。');
+      // }
       try {
-        const response = await axios.post("http://localhost:8000/api/auth/login/", {
-          email: this.email,
-          password: this.password,
-        });
+        const response = await login(this.email, this.password);
+        console.logs("Login Success:", response);
         localStorage.setItem('token', response.data.access);
-        this.$router.push("/"); 
+        localStorage.setItem('refresh_token', response.data.refresh);
+        this.$router.push('/');
       } catch(error) {
         console.error(error);
-        alert('ログインに失敗しました。');
+        this.errorMessage = 'ログインに失敗しました。';
       }
     },
   },

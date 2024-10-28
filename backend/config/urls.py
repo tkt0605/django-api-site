@@ -21,12 +21,16 @@ from django.conf.urls.static import static
 # from rest_framework import routers
 from libra import views as libra_views
 from accounts import views as accpunts_views
+from rest_framework_simplejwt.views import TokenRefreshView, TokenObtainPairView
 from rest_framework import routers
 router = routers.DefaultRouter()
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('api/', include("libra.urls")),
+    # path("accounts/", include('allauth.urls')),
     path("api/auth/", include("dj_rest_auth.urls")),
+    path('api/auth/login/', TokenObtainPairView.as_view(), name='token_obtain_pair'),  # ログインでアクセストークン取得
+    path('api/auth/refresh/', TokenRefreshView.as_view(), name='token_refresh'),  # トークンのリフレッシュ
     path('api/auth/registration/', include("dj_rest_auth.registration.urls")),
     path("api/", include(router.urls))
 ]

@@ -3,7 +3,7 @@
   <div id="login-form">
     <h2>Login</h2>
 
-    <form @submit.prevent="login">
+    <form @submit.prevent="login" method='POST'>
       <input type="text" v-model="email" placeholder="Email" required />
       <input type="password" v-model="password" placeholder="Password" required />
       <button type="submit">Login</button>
@@ -15,7 +15,7 @@
 </template>
 
 <script>
-// import axios from 'axios';
+import axios from 'axios';
 export default {
   name: 'UserLogin',  // 名前を変更
   data() {
@@ -26,33 +26,20 @@ export default {
     };
   },
   methods: {
-    async login(){
-      try{
-        const response = await fetch('http://localhost:8000/auth/login', {
-          method: 'POST',
-          headers: {"Content-Type": "application/json"},
-          body: JSON.stringify({
-            email: this.email,
-            password:this.password,
-          })
+    async login() {
+      try {
+        const response = await axios.post("http://localhost:8000/api/auth/login/", {
+          email: this.email,
+          password: this.password,
         });
-        if (response.ok){
-          const data = await response.json();
-          this.message == 'ログイン成功! トークン: '+data.access;
-          localStorage.setItem('token', data.access);
-        }else{
-          const errorData  = await response.json();
-          this.message == 'エラー: '+ JSON.stringify(errorData);
-        }
-      } catch (error){
-        console.log("ログインエラー: ", error);
-        this.message == "ログインに失敗しました。";
+        localStorage.setItem('token', response.data.access);
+        this.$router.push("/"); 
+      } catch(error) {
+        console.error(error);
+        alert('ログインに失敗しました。');
       }
-    }
+    },
   },
-  // mounted() {
-  //   axios POST('http')
-  // }
 };
 </script>
 <style>

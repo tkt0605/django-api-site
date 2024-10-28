@@ -1,7 +1,7 @@
 <template>
     <div id="register-form">
       <h2>Register</h2>
-      <form @submit.prevent="register" class="form">
+      <form @submit.prevent="register" class="form" method="POST">
         <input class="form-input" type="text" v-model="email" placeholder="Email" required />
         <input class="form-input" type="text" v-model="username" placeholder="UserName" required/>
         <input class="form-input" type="password" v-model="password1" placeholder="Password" required />
@@ -16,24 +16,36 @@
   
   <script>
 // import router from '@/router';
-
-  export default {
-    name: 'UserRegister',  // 名前を変更
-    data() {
-      return {
-        email: '',
-        username: '',
-        password1: '',
-        password2: '',
-      };
+import axios from 'axios';
+export default {
+  name: 'UserRegister',  // 名前を変更
+  data() {
+    return {
+      email: '',
+      username: '',
+      password1: '',
+      password2: '',
+    };
+  },
+  methods: {
+    async register() {
+      try {
+        const response = await axios.post("http://localhost:8000/api/auth/registration/", {
+          email: this.email,
+          username: this.username,
+          password1: this.password1,
+          password2: this.password2,
+        });
+        localStorage.setItem('token', response.data.access);
+        this.$router.push('/');
+      } catch (error){
+        console.error(error);
+        alert('登録に失敗しました。');
+      }
     },
-    methods: {
-      async register() {
-        console.log('Registration attempt:', this.email);
-      },
-    },
-  };
-  </script>
+  },
+};
+</script>
 
   <style>
   #register-form{

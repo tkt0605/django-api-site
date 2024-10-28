@@ -22,16 +22,17 @@ from django.conf.urls.static import static
 from libra import views as libra_views
 from accounts import views as accpunts_views
 from rest_framework import routers
-
 router = routers.DefaultRouter()
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('api/', include("libra.urls")),
-    path("auth/", include('dj_rest_auth.urls')),
-    path('auth/registration/', include('dj_rest_auth.registration.urls')),
+    path('', include("libra.urls")),
+    path("api/auth/", include("dj_rest_auth.urls")),
+    path('api/auth/registration/', include("dj_rest_auth.registration.urls")),
     path("api/", include(router.urls))
 ]
 
 if settings.DEBUG:
     urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+
+

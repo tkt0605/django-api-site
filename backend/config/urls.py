@@ -25,7 +25,7 @@ from rest_framework import routers
 router = routers.DefaultRouter()
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', include("libra.urls")),
+    path('api/', include("libra.urls")),
     path("api/auth/", include("dj_rest_auth.urls")),
     path('api/auth/registration/', include("dj_rest_auth.registration.urls")),
     path("api/", include(router.urls))

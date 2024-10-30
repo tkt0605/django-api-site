@@ -3,9 +3,10 @@
       <header>
         <div class='headline'>
           <div class="logo"><b>Libra</b></div> 
-          <form class="search-form">
-            <input  v-model="query" @keyup.enter="search" type="text" placeholder="本を検索..." class="search-input"/>
-            <button @click="SearchBooks" type="submit" class="search-button">🔍</button>
+          <!-- フォームのsubmitイベントがデフォルトではページをリロードしてしまいます。それを防ぐために、@submit.preventを使います。 -->
+          <form class="search-form"  @submit.prevent="search()">
+            <input  v-model="query" type="text" placeholder="本を検索..." class="search-input"/>
+            <button type="submit" class="search-button">🔍</button>
           </form>
           <nav> 
             <ul class="head">
@@ -17,13 +18,6 @@
         </div>
       </header>
       <main>
-        <div class="seach_result">
-          <ul>
-            <li v-for="book in books" :key="book.id">
-              <strong>{{ book.volumeInfo.title }}</strong> by<em>{{ book.volumeInfo.authors?.join(', ') }}</em>
-            </li> 
-          </ul>
-        </div>
         <router-view />  
       </main>
       <footer>
@@ -39,16 +33,18 @@
       return{
         error: '',
         query: '',
+        books: [],
       };
     },
     methods: {
       async search() {
         if (this.query) {
-        // 検索結果ページに検索クエリを渡して遷移
-        this.$router.push({ name: 'SearchResults', query: { q: this.query } });
-      }
+          this.$router.push({ name: 'SearchResult', query: { q: this.query } });
+        }else {
+          alert('検索クエリを入力してください。');
+        }
+      },
     },
-  },
   }
   </script>
   

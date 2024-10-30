@@ -20,26 +20,30 @@
   import { searchBooks } from '@/services/authService';
   
   export default {
-    data() {
-      return {
-        books: [],  // 検索結果
-        error: '',  // エラーメッセージ
-      };
-    },
-    computed: {
-      query() {
-        return this.$route.query.q;  // URLのクエリパラメータから検索クエリを取得
-      },
-    },
-    async created() {
-      try {
-        const data = await searchBooks(this.query);
-        this.books = data.items || [];
-      } catch (error) {
-        this.error = '検索に失敗しました。もう一度お試しください。';
-        console.error('Search Error:', error);
+  props: ['query'], // クエリをpropsとして受け取る
+  data() {
+    return {
+      books: [], // 検索結果
+      error: '', // エラーメッセージ
+    };
+  },
+  async created() {
+    if (!this.query) {
+      this.error = '検索クエリが空です。';
+      return;
+    }
+
+    try {
+      const data = await searchBooks(this.query);
+      this.books = data.items || [];
+      if (!this.books.length) {
+        this.error = `「${this.query}」に一致する本が見つかりませんでした。`;
       }
-    },
+    } catch (error) {
+      this.error = '検索に失敗しました。';
+      console.error('Search Error:', error);
+    }
+  },
   };
   </script>
   

@@ -14,7 +14,7 @@ const routes = [
         children: [
             {path: "", name: 'Index', component: HomeIndex},
             {path: "profile", name: "account", component: AccountProfile},
-            { path: 'search/', name: "SearchResult", component: SearchResult},
+            { path: 'search', name: "SearchResult", component: SearchResult, props: (route) => ({ query: route.query.q })},
         ],
       },
     {

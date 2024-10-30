@@ -4,7 +4,7 @@
         <div class='headline'>
           <div class="logo"><b>Libra</b></div> 
           <form class="search-form">
-            <input  v-model="query" @keyup.enter="searchBooks" type="text" placeholder="本を検索..." class="search-input"/>
+            <input  v-model="query" @keyup.enter="search" type="text" placeholder="本を検索..." class="search-input"/>
             <button @click="SearchBooks" type="submit" class="search-button">🔍</button>
           </form>
           <nav> 
@@ -17,7 +17,14 @@
         </div>
       </header>
       <main>
-        <router-view />  <!-- ここにルーティングの内容が表示される -->
+        <div class="seach_result">
+          <ul>
+            <li v-for="book in books" :key="book.id">
+              <strong>{{ book.volumeInfo.title }}</strong> by<em>{{ book.volumeInfo.authors?.join(', ') }}</em>
+            </li> 
+          </ul>
+        </div>
+        <router-view />  
       </main>
       <footer>
         <p>&copy; 2024 Libra </p>
@@ -26,29 +33,22 @@
   </template>
   
   <script>
-import { searchBooks } from '@/services/authService';
-
-  // import IndexHome from './components/Index.vue';
   export default {
     name: 'DefaultLayout',
     data() {
       return{
         error: '',
         query: '',
-        books: [],
       };
     },
     methods: {
-      async search(){
-        try{
-          const data = await searchBooks(this.query);
-          this.books = data.items || []
-          console.log("検索結果", data)
-        }catch(error){
-          this.error='検索に失敗しました。'
-        }
+      async search() {
+        if (this.query) {
+        // 検索結果ページに検索クエリを渡して遷移
+        this.$router.push({ name: 'SearchResults', query: { q: this.query } });
       }
     },
+  },
   }
   </script>
   

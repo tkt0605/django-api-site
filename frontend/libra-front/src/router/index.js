@@ -6,6 +6,7 @@ import AccountProfile from "@/components/views/Account.vue";
 import AuthLayout from "@/components/layout/AuthLayout.vue";
 import UserLogout from "@/components/views/Logout.vue";
 import DefaultLayout from "@/components/layout/DefaultLayout.vue";
+import SearchResult from "@/components/views/SearchResult.vue";
 const routes = [
     {
         path: '/',
@@ -13,6 +14,7 @@ const routes = [
         children: [
             {path: "", name: 'Index', component: HomeIndex},
             {path: "profile", name: "account", component: AccountProfile},
+            { path: 'search/', name: "SearchResult", component: SearchResult},
         ],
       },
     {
@@ -23,7 +25,7 @@ const routes = [
             { path: '', redirect: '/accounts/login',},
             { path: 'login', name: 'Login', component: UserLogin },
             { path: 'register', name: 'Register', component: UserRegister},
-            { path: "logout", name: "Logout", component: UserLogout}
+            { path: "logout", name: "Logout", component: UserLogout},
         ],
       },
 ];

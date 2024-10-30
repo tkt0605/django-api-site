@@ -136,12 +136,14 @@ export async function HelloWorld(message) {
 export async function searchBooks(query){
   try{
     const csrfToken = getCSRFToken();
-    const response = await axios.get('http://localhost:8000/api/books/',
+    const response = await axios.get('http://localhost:8000/api/search/',
+      {q: query},
       {
         params: { q: query },
         headers: {
           'Content-Type': "application/json",
           'X-CSRFToken': csrfToken,
+          Authorization: `Token ${localStorage.getItem('token')}`, 
         },
         withCredentials: true,
       },

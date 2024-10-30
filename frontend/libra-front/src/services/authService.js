@@ -36,8 +36,8 @@ export async function  login(email, password) {
             },
         );
         console.log("Login Success: ", response.data);
-        console.log('Login Response:', response.data);  // レスポンスを確認
         if (response.data && response.data.key) {
+          localStorage.setItem('token', response.data.key)
           return response.data;
         } else {
           throw new Error('Tokenが見つかりません。レスポンスを確認してください。')
@@ -50,7 +50,7 @@ export async function  login(email, password) {
 export async function register(email, username, password1, password2) {
   try{
     const csrfToken = getCSRFToken();
-    const response = await axios.post('http://localhost:8000/api/auth/login/', 
+    const response = await axios.post('http://localhost:8000/api/auth/registration/', 
       {email, username, password1, password2},
       {
         headers: {
@@ -60,10 +60,10 @@ export async function register(email, username, password1, password2) {
         withCredentials: true,
       },
     );
-    console.log('Register Success: ', response.data);
     console.log("Register Response: ", response.data);
-    if (response.data && response.data.access && response.key) {
-      return response.data && response.key;
+    if (response.data &&  response.data.key) {
+      localStorage.setItem('token', response.data.key); // トークンを保存
+      return response.data;
     } else{
       throw new Error("Tokenが見つかりません。レスポンスを確認してください。");
     }
@@ -80,7 +80,7 @@ export async function refreshToken() {
     });
 
     const newAccessToken = response.data.access;
-    localStorage.setItem('authToken', newAccessToken);
+    localStorage.setItem('token', newAccessToken);
     console.log('トークンが正常にリフレッシュされました:', newAccessToken);
     return newAccessToken;
   } catch (error) {
@@ -99,13 +99,13 @@ export async function logout() {
         headers: {
           "Content-Type": "application/json",
           'X-CSRFToken': csrfToken,
-          Authorization: `Token ${localStorage.getItem('authToken')}`,
+          Authorization: `Token ${localStorage.getItem('token')}`,
         },
         withCredentials: true,
       },
     );
     console.log("Logout Success: ", response.data);
-    localStorage.removeItem("authToken");
+    localStorage.removeItem("token");
     localStorage.removeItem("refresh_token");
   } catch(error){
     console.log("Logout Error: ", error.response || error.message);
@@ -129,6 +129,27 @@ export async function HelloWorld(message) {
     return response.data;
   } catch(error) {
     console.error("APIの接続に失敗しました。", error.response || error.message);
+    throw error;
+  }
+}
+
+export async function searchBooks(query){
+  try{
+    const csrfToken = getCSRFToken();
+    const response = await axios.get('http://localhost:8000/api/books/',
+      {
+        params: { q: query },
+        headers: {
+          'Content-Type': "application/json",
+          'X-CSRFToken': csrfToken,
+        },
+        withCredentials: true,
+      },
+    );
+    console.log('検索結果:', response.data);
+    return response.data;
+  } catch(error){
+    console.error("検索に失敗しました。", error.response || error.message);
     throw error;
   }
 }

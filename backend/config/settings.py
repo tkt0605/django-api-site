@@ -63,6 +63,7 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'corsheaders.middleware.CorsMiddleware',
     'allauth.account.middleware.AccountMiddleware',
+    'django.middleware.csrf.CsrfViewMiddleware',  
     'django.middleware.common.CommonMiddleware',
 ]
 AUTHENTICATION_BACKENDS = [
@@ -84,10 +85,12 @@ REST_AUTH_SERIALIZERS = {
 
 SIMPLE_JWT = {
     'AUTH_HEADER_TYPES': ('Bearer',),
-    'ACCESS_TOKEN_LIFETIME': timedelta(minutes=5),
-    'REFRESH_TOKEN_LIFETIME': timedelta(days=1),
     'ROTATE_REFRESH_TOKENS': True,
-    'BLACKLIST_AFTER_ROTATION': True,
+    'BLACKLIST_AFTER_ROTATION': True
+    # 'ACCESS_TOKEN_LIFETIME': timedelta(minutes=5),
+    # 'REFRESH_TOKEN_LIFETIME': timedelta(days=1),
+    # 'ROTATE_REFRESH_TOKENS': True,
+    # 'BLACKLIST_AFTER_ROTATION': True,
 }
 
 # CORS_ORIGINS_ALLOW_ALL = True
@@ -99,8 +102,8 @@ CORS_ALLOWED_ORIGINS = [
 CSRF_TRUSTED_ORIGINS = [
     "http://localhost:8080",
 ]
-SESSION_COOKIE_SECURE = False  # ローカル開発環境の場合
-CSRF_COOKIE_SECURE = False  # ローカル開発環境の場合
+# SESSION_COOKIE_SECURE = False  # ローカル開発環境の場合
+# CSRF_COOKIE_SECURE = False  # ローカル開発環境の場合
 CORS_ALLOW_CREDENTIALS = True  # Cookieを許可する
 TEMPLATES = [
     {
@@ -185,7 +188,8 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 AUTH_USER_MODEL = "accounts.Customuser"
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 LOGIN_REDIRECT_URL = "/"
-LOGOUT_REDIRECT_URL = "/accounts/auth/"
+LOGIN_URL = '/accounts/login'
+LOGOUT_REDIRECT_URL = "/accounts/login"
 ACCOUNT_USERNAME_REQUIRED = False
 ACCOUNT_EMAIL_REQUIRED = True
 ACCOUNT_EMAIL_VERIFICATION = 'optional'

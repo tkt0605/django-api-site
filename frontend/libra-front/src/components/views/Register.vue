@@ -1,6 +1,6 @@
 <template>
     <div id="register-form">
-      <h2>Register</h2>
+      <!-- <h2>Register</h2> -->
       <form @submit.prevent="register" class="form" method="POST">
         <input class="form-input" type="text" v-model="email" placeholder="Email" required />
         <input class="form-input" type="text" v-model="username" placeholder="UserName" required/>
@@ -33,22 +33,20 @@ export default {
   },
   methods: {
     async register() {
+      if (this.password1 != this.password2) {
+        this.errorMessage = 'パスワードが一致しません。';
+        return;
+      }
       try {
         const response = await register(this.email, this.username, this.password1, this.password2);
         console.log('Register Success: ', response);
-        if (response.key) {
-          localStorage.setItem('authToken', response.key);
-          console.log("Token saved:", localStorage.getItem('authToken', response.key))
-          this.$router.push('login/');
-        } else{
-          throw new Error("登録できませんでした。");
-        }
-      }catch(error){
-        console.error("Login Error: ", error.response || error.message);
-        throw error
+        this.$router.push('login/');
+      } catch(error){
+        console.error("Register Error: ", error.message || error);
+        this.errorMessage = error.response?.data.detail || '登録に失敗しました。';
       }
-    }
-  }
+    },
+  },
 };
 </script>
 

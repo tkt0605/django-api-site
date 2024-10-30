@@ -33,8 +33,8 @@ export default {
         const response = await login(this.email, this.password);
         console.log('Login Success:', response);
         if (response && response.key) {
-          localStorage.setItem('authToken', response.key);
-          console.log("Token saved:", localStorage.getItem('authToken', response.key))
+          localStorage.setItem('token', response.key);
+          console.log("Token saved:", localStorage.getItem('token', response.key))
           this.$router.push('/');
         } else{
           throw new Error('Tokenが見つかりません。');

@@ -4,8 +4,8 @@
         <div class='headline'>
           <div class="logo"><b>Libra</b></div> 
           <form class="search-form">
-            <input type="text" placeholder="本を検索..." class="search-input"/>
-            <button type="submit" class="search-button">🔍</button>
+            <input  v-model="query" @keyup.enter="searchBooks" type="text" placeholder="本を検索..." class="search-input"/>
+            <button @click="SearchBooks" type="submit" class="search-button">🔍</button>
           </form>
           <nav> 
             <ul class="head">
@@ -26,12 +26,29 @@
   </template>
   
   <script>
+import { searchBooks } from '@/services/authService';
+
   // import IndexHome from './components/Index.vue';
   export default {
     name: 'DefaultLayout',
-    // components: {
-    //   IndexHome
-    // }
+    data() {
+      return{
+        error: '',
+        query: '',
+        books: [],
+      };
+    },
+    methods: {
+      async search(){
+        try{
+          const data = await searchBooks(this.query);
+          this.books = data.items || []
+          console.log("検索結果", data)
+        }catch(error){
+          this.error='検索に失敗しました。'
+        }
+      }
+    },
   }
   </script>
   

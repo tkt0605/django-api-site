@@ -27,10 +27,10 @@ router = routers.DefaultRouter()
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('api/', include("libra.urls")),
-    # path("accounts/", include('allauth.urls')),
+    path("accounts/", include('allauth.urls')),
     path("api/auth/", include("dj_rest_auth.urls")),
-    path('api/auth/login/', TokenObtainPairView.as_view(), name='token_obtain_pair'),  # ログインでアクセストークン取得
-    path('api/auth/refresh/', TokenRefreshView.as_view(), name='token_refresh'),  # トークンのリフレッシュ
+    path('api/auth/token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),  # ログインでアクセストークン取得
+    path('api/auth/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),  # トークンのリフレッシュ, http://localhost:8000/api/auth/registration/
     path('api/auth/registration/', include("dj_rest_auth.registration.urls")),
     path("api/", include(router.urls))
 ]

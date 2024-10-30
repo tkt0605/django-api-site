@@ -1,32 +1,21 @@
 <template>
   <div>
     <h2>API Message</h2>
-    <p v-if="message">{{message}}</p>   
     <RouterLink to="/accounts/logout">Logout</RouterLink>
+    <div class="seach_result">
+      <ul>
+        <li v-for="book in books" :key="book.id">
+          <strong>{{ book.volumeInfo.title }}</strong> by
+          <em>{{ book.volumeInfo.authors?.join(', ') }}</em>
+        </li> 
+      </ul>
+    </div>
   </div>
 </template>
   
 <script>
-// import axios from 'axios';
-import { HelloWorld } from '@/services/authService';
-export default {
-  // name: 'ルーター名'を入れないと、index.jsでのrouterを取得できませんでした。
+export default{
   name: "HomeIndex",
-  data() {
-    return {
-      message: '',  // messageを初期化して定義
-    };
-  },
-  methods: {
-    async HelloWorld() {
-      try{
-        const data = await HelloWorld();
-        this.message = data.message;
-      } catch(error){
-        console.log("メッセージの取得に失敗しました。", error);
-      }
-    },
-  },
-};
+}
 </script>
   

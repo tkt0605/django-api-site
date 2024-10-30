@@ -7,8 +7,9 @@
       <div v-if="books.length">
         <ul>
           <li v-for="book in books" :key="book.id">
-            <strong>{{ book.volumeInfo.title }}</strong> by
-            <em>{{ book.volumeInfo.authors?.join(', ') }}</em>
+            <!-- <img :src="book.volumeInfo?.imageLinks?.thumbnail || 'https://via.placeholder.com/128x193?text=No+Cover'" alt="Book cover"class="book-cover"/> -->
+            <strong>{{ book.volumeInfo.title }}</strong> by<em>{{ book.volumeInfo.authors?.join(', ') }}</em>
+            <button @click='AddDatabaseBooks()'>AddBook</button>
           </li>
         </ul>
       </div>
@@ -16,36 +17,68 @@
     </div>
   </template>
   
-  <script>
-  import { searchBooks } from '@/services/authService';
-  
-  export default {
-  props: ['query'], // クエリをpropsとして受け取る
-  data() {
-    return {
-      books: [], // 検索結果
-      error: '', // エラーメッセージ
-    };
-  },
-  async created() {
-    if (!this.query) {
-      this.error = '検索クエリが空です。';
-      return;
-    }
+<script>
+import { searchBooks } from '@/services/authService';
+import axios from 'axios';
 
-    try {
-      const data = await searchBooks(this.query);
-      this.books = data.items || [];
-      if (!this.books.length) {
-        this.error = `「${this.query}」に一致する本が見つかりませんでした。`;
-      }
-    } catch (error) {
-      this.error = '検索に失敗しました。';
-      console.error('Search Error:', error);
-    }
-  },
-  };
-  </script>
+export default {
+    props: ["query"],
+    data() {
+        return{
+            books: [],
+            error: '',
+        }
+    },
+    watch:{
+        query: {
+            immediate: true,
+            handler(newQuery) {
+                this.perfomrsSearch(newQuery);
+            },
+        },
+    },
+    methods:{
+        async perfomrsSearch(query) {
+            if (!query) {
+                this.error = "検索クエリが空です。";
+                this.books = [];
+                return;
+            }
+            try {
+                const data = await searchBooks(query);
+                console.log("APIからのデータ: ", data);
+                if (data.items && data.items.length){
+                    this.books =  data.items;
+                    this.error = '';
+                }else{
+                    this.error = `「${query}」に一致する本が見つかりませんでした。`;
+                    this.books = [];
+                }
+            }catch(error){
+                this.error = "検索に失敗しました。";
+                console.error("Search Error: ", error);
+            }
+        },
+        async AddDatabaseBooks(book) {
+            const isbnData = book.volumeInfo?.industryIdentifiers.find((id) => id.type === 'ISBN_13');
+            const newBook ={
+                title: book.volumeInfo?.title,
+                publisher: book.volumeInfo?.publisher || '出版社',
+                publish_date: book.volumeInfo?.publishDate || '出版日',
+                authors: book.volumeInfo?.authors?.join(', ') || 'Unknown',
+                stock: 0,
+                price: 0,
+                isbn_10: isbnData?.identifier || '',
+                isbn_13: isbnData?.identifier || '',
+                language: book.volumeInfo?.language || "ja",
+            };
+            // データをローカルデータベースに追加する時は、postを使用
+            await axios.post('http://localhost:8000/api/books/', newBook);
+            alert('Book added!');
+        }
+    },
+};
+</script>
   
   <style>
   .error {

@@ -4,7 +4,7 @@
         <div class='headline'>
           <div class="logo"><b>Libra</b></div> 
           <!-- フォームのsubmitイベントがデフォルトではページをリロードしてしまいます。それを防ぐために、@submit.preventを使います。 -->
-          <form class="search-form"  @submit.prevent="search()">
+          <form class="search-form"  @submit.prevent="search">
             <input  v-model="query" type="text" placeholder="本を検索..." class="search-input"/>
             <button type="submit" class="search-button">🔍</button>
           </form>

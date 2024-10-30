@@ -7,7 +7,8 @@ from . import views
 router = routers.DefaultRouter()
 router.register('book', views.BookViewSet)
 urlpatterns = [
-      path('search', views.google_books_search, name='google_books_search'),
+      path('search/', views.google_books_search, name='google_books_search'),
+      path('books/', views.add_book, name='add_book'),
       path('', include(router.urls))
 ]
 if settings.DEBUG:

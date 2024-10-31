@@ -33,10 +33,10 @@ def google_books_search(request):
 
     response_data = resopnse.json().get('items', [])
     existing_isbn13 = set(Book.objects.values_list('isbn_13', flat=False))
-    existing_isbn10 = set(Book.objects.values_list('isbn_10', flat=False))
+    # existing_isbn10 = set(Book.objects.values_list('isbn_10', flat=False))
     new_books = [
         book for book in response_data
-        if 'isbn_13' in get_isbn(book) and get_isbn(book)['isbn_13'] not in existing_isbn13 or existing_isbn10 
+        if 'isbn_13' in get_isbn(book) and get_isbn(book)['isbn_13'] not in existing_isbn13 
     ]
     return Response(new_books, status=False)
     
@@ -44,6 +44,6 @@ class BookViewSet(viewsets.ModelViewSet):
     queryset = Book.objects.all()  
     serializer_class = BookSerializer 
 def get_isbn(book):
-    identifiers = book.get('volumeInfo', {}).get('industryIdentifiers', [])
+    identifiers = book.get('book.volumeInfo', {}).get('industryIdentifiers', [])
     isbn_data = {identifier['type']: identifier['identifier'] for identifier in identifiers}
     return isbn_data

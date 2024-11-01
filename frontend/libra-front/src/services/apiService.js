@@ -8,15 +8,30 @@ const appClient = axios.create({
   },
 });
 
-export function BooksList(){
-  return appClient.get('');
+export function fetchBooks(){
+  // try{
+  //   const response = appClient.get('books/',
+  //     {
+  //       headers: {
+  //         'Content-Type': "application/json",
+  //       },
+  //       withCredentials: true,
+  //     },
+  //   );
+  //   console.log('本一覧:', response.data);
+  //   return response.data;
+  // } catch(error){
+  //   console.error("表示に失敗しました。", error.response || error.message);
+  //   throw error;
+  // }
+  return appClient.get('books/');
 }
 
-export function BooksDetails(bookId) {
+export function fetchBookDetail(bookId) {
   return appClient.get(`books/${bookId}`);
 }
 
-export function AddBooks(bookData) {
+export function addBook(bookData) {
   return appClient.post('add/book/', bookData);
 }
 

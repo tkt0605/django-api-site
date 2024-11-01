@@ -27,8 +27,7 @@ export default {
       errorMessage: '',
     };
   },
-  methods: {
-    async login() {
+  async login() {
       try {
         const response = await login(this.email, this.password);
         console.log('Login Success:', response);
@@ -44,7 +43,6 @@ export default {
         // Vueの状態にエラーメッセージを設定
         this.errorMessage = error.response?.data?.detail || 'ログインに失敗しました。';
       }
-    },
   },
 };
 </script>

@@ -20,11 +20,11 @@
 </template>
 
 <script>
-import { BooksDetails } from '@/services/apiService';
+import { fetchBookDetail } from '@/services/apiService';
 // import { create } from 'core-js/core/object';
 
 export default{
-    name: "BooksDetails",
+    name: "fetchBookDetail",
     props: ["bookId"],
     data(){
         return{
@@ -35,7 +35,7 @@ export default{
     methods:{
         async created(){
             try{
-                const response = await BooksDetails(this.bookId);
+                const response = await fetchBookDetail(this.bookId);
                 this.book = response.data;
             }catch(error){
                 this.error = 'Failed to load book details.';

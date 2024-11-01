@@ -14,8 +14,7 @@ export default {
             errorMessage: '',
         };
     },
-    methods: {
-        async handleLogout() {
+    async handleLogout() {
             try{
                 await logout();
                 
@@ -24,7 +23,6 @@ export default {
                 console.error('Logout Error:', error.message || error);
                 this.errorMessage = error.response?.data?.detail || '失敗しました。';
             }
-        }
-    }
+    },
 }
 </script>

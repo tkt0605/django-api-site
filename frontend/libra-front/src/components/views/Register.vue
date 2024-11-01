@@ -31,8 +31,7 @@ export default {
       errorMessage: ''
     };
   },
-  methods: {
-    async register() {
+  async register() {
       if (this.password1 != this.password2) {
         this.errorMessage = 'パスワードが一致しません。';
         return;
@@ -45,7 +44,6 @@ export default {
         console.error("Register Error: ", error.message || error);
         this.errorMessage = error.response?.data.detail || '登録に失敗しました。';
       }
-    },
   },
 };
 </script>

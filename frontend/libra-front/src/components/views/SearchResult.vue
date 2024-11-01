@@ -6,10 +6,13 @@
         <ul>
           <div>検索結果： "{{ query }}"</div>
           <li v-for="book in books" :key="book.id">
-            <!-- <img :src="book.volumeInfo?.imageLinks?.thumbnail || 'https://via.placeholder.com/128x193?text=No+Cover'" alt="Book cover"class="book-cover"/> -->
+            <img 
+                :src="book.volumeInfo.imageLinks.thumbnail || book.volumeInfo.imageLinks.smallThumbnail" 
+                alt="Book cover"
+                class="book-cover"
+            />
             <strong>{{ book.volumeInfo.title }}</strong> by<em>{{ book.volumeInfo.authors?.join(', ') }}</em>
-            <p>{{ book.volumeInfo.industryIdentifiers }}</p>
-            <button @click='AddDatabaseBooks(book)'>AddBook</button>
+            <button  @click='AddDatabaseBooks(book)'>AddBook</button>
           </li>
         </ul>
       </div>
@@ -45,6 +48,13 @@ export default {
             }
         return '';
         },
+        formatDateYMD(dataString){
+            const date = new Date(dataString);
+            const year = date.getFullYear();
+            const month = String(date.getMonth() + 1).padStart(2, '0');
+            const day = String(date.getDay()).padStart(2, '0');
+            return `${year}-${month}-${day}`
+        },
         async perfomrsSearch(query) {
             if (!query) {
                 this.error = "検索クエリが空です。";
@@ -77,13 +87,15 @@ export default {
                 const csrftoken = this.getCSRFToken(); // 作成したcsrfTokenの取得
                 const isbnData13 = book.volumeInfo.industryIdentifiers?.find((id)=> id.type==='ISBN_13') || {};
                 const isbnData10 = book.volumeInfo.industryIdentifiers?.find((id)=> id.type==='ISBN_10') || {};
+                const formatDateYMD = book.volumeInfo.publishedDate ? this.formatDateYMD(book.volumeInfo.publishedDate) : '1990-10-20';
+
                 const newBook ={
                     title: book.volumeInfo?.title,
+                    // image: book.volumeInfo.imageLinks?.thumbnail || null,
                     publisher: book.volumeInfo?.publisher || '出版社',
-                    publish_date: book.volumeInfo?.publishDate || '出版日',
-                    author: book.volumeInfo?.author?.join(', ') || 'Unknown',
-                    stock: 0,
-                    price: 0,
+                    publish_date: formatDateYMD || '出版日',
+                    author: book.volumeInfo?.authors?.join(', ') || 'Unknown',
+                    price: book.volumeInfo.price || 0, 
                     isbn_10: isbnData10.identifier || '',
                     isbn_13: isbnData13.identifier || '',
                     language: book.volumeInfo?.language || "ja",

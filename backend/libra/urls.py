@@ -8,7 +8,11 @@ router = routers.DefaultRouter()
 router.register('book', views.BookViewSet)
 urlpatterns = [
       path('search/', views.google_books_search, name='google_books_search'),
-      path('books/', views.add_book, name='add_book'),
+      path('add/book/', views.add_book, name='add-book'),
+      path('books/', views.BooksListView.as_view(), name='booklist'),
+      path('books/<uuid:pk>', views.BooksDeatilView.as_view(), name='bookdetails'),
+      path("order/", views.OrderListView.as_view(), name="orderlist"),
+      path('order/<uuid:pk>', views.OrderDetailView.as_view(), name='orderdetail'),
       path('', include(router.urls))
 ]
 if settings.DEBUG:

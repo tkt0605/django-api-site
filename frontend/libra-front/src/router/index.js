@@ -7,6 +7,7 @@ import AuthLayout from "@/components/layout/AuthLayout.vue";
 import UserLogout from "@/components/views/Logout.vue";
 import DefaultLayout from "@/components/layout/DefaultLayout.vue";
 import SearchResult from "@/components/views/SearchResult.vue";
+import BooksDetails from "@/components/views/BooksDetails.vue";
 const routes = [
     {
         path: '/',
@@ -15,6 +16,7 @@ const routes = [
             {path: "", name: 'Index', component: HomeIndex},
             {path: "profile", name: "account", component: AccountProfile},
             { path: 'search', name: "SearchResult", component: SearchResult, props: (route) => ({ query: route.query.q })},
+            {path: 'books/:id', name: "BooksDetails", component: BooksDetails, props: true},
         ],
       },
     {

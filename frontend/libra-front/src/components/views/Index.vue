@@ -3,11 +3,11 @@
     <ul>
       <li v-for="book in books" :key="book.id" class="list">
         <router-link :to="{name: 'fetchBookDetail', params: {id: book.id}}">
-          <img
+          <!-- <img
             :src="book.volumeInfo.imageLinks.thumbnail || book.volumeInfo.imageLinks.smallThumbnail" 
             alt="Book cover"
             class="book-cover"
-          />
+          /> -->
           <p>{{ book.title }}</p>
         </router-link>
       </li>

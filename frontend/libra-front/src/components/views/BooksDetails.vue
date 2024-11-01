@@ -24,24 +24,23 @@ import { fetchBookDetail } from '@/services/apiService';
 // import { create } from 'core-js/core/object';
 
 export default{
+    //index.jsでのfetchBookDetailでのルーターのprops引数を持ってくる。
     name: "fetchBookDetail",
-    props: ["bookId"],
+    props: ["id"],
     data(){
         return{
             book: null,
             error: '',
         }
     },
-    methods:{
-        async created(){
-            try{
-                const response = await fetchBookDetail(this.bookId);
-                this.book = response.data;
-            }catch(error){
-                this.error = 'Failed to load book details.';
-                console.error("Book Details Error: ", error);
-            }
-        },
+    async created(){
+        try{
+            const response = await fetchBookDetail(this.id);
+            this.book = response.data;
+        }catch(error){
+            this.error = 'Failed to load book details.';
+            console.error("Book Details Error: ", error);
+        }
     },
 };
 </script>

@@ -6,13 +6,16 @@ from rest_framework import routers
 from . import views
 router = routers.DefaultRouter()
 router.register('book', views.BookViewSet)
+router.register('order', views.OrderViewSet)
+router.register("users", views.CustomUserViewSet)
+router.register('account', views.AccountViewSet)
 urlpatterns = [
       path('search/', views.google_books_search, name='google_books_search'),
       path('add/book/', views.add_book, name='add-book'),
       path('books/', views.BooksListView.as_view(), name='booklist'),
       path('books/<uuid:pk>', views.BooksDeatilView.as_view(), name='bookdetails'),
-      path("order/", views.OrderListView.as_view(), name="orderlist"),
-      path('order/<uuid:pk>', views.OrderDetailView.as_view(), name='orderdetail'),
+      path("orders/", views.OrderListView.as_view(), name="orderlist"),
+      path('orders/<uuid:pk>', views.OrderDetailView.as_view(), name='orderdetail'),
       path('', include(router.urls))
 ]
 if settings.DEBUG:

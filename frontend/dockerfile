@@ -7,6 +7,8 @@ RUN apt-get update && apt-get install -y curl && \
 
 WORKDIR /libra-front
 COPY ./libra-front/package*.json ./
+RUN npm install vuex@next 
+RUN npm install js-cookie
 RUN npm install 
 COPY ./libra-front/ .
 EXPOSE 8080

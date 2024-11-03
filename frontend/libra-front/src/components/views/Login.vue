@@ -1,25 +1,20 @@
-
 <template>
-  <div id="login-form">
+  <div>
     <h2>Login</h2>
-
-    <form @submit.prevent="login" method='POST'>
-      <input type="text" v-model="email" placeholder="Email" required />
-      <input type="password" v-model="password" placeholder="Password" required />
+    <form @submit.prevent="handleLogin">
+      <input v-model="email" placeholder="Email" type="email" />
+      <input v-model="password" placeholder="Password" type="password" />
       <button type="submit">Login</button>
     </form>
-    <div class="'other-page'">
-      <p>アカウントをお持ちでない場合<RouterLink to="/accounts/register">サインアップ</RouterLink></p>
-      <p v-if="errorMessage">{{ errorMessage }}</p>
-    </div>
+    <p v-if="errorMessage">{{ errorMessage }}</p>
   </div>
 </template>
 
 <script>
-// import axios from 'axios';
-import {login} from '@/services/authService'
+import { mapActions } from 'vuex';
+
 export default {
-  name: 'UserLogin',  // 名前を変更
+  name: "UserLogin",
   data() {
     return {
       email: '',
@@ -27,27 +22,16 @@ export default {
       errorMessage: '',
     };
   },
-  async login() {
+  methods: {
+    ...mapActions(['login']),
+    async handleLogin() {
       try {
-        const response = await login(this.email, this.password);
-        console.log('Login Success:', response);
-        if (response && response.key) {
-          localStorage.setItem('token', response.key);
-          console.log("Token saved:", localStorage.getItem('token', response.key))
-          this.$router.push('/');
-        } else{
-          throw new Error('Tokenが見つかりません。');
-        }
-      } catch (error){
-        console.error('Login Error:', error.message || error);
-        // Vueの状態にエラーメッセージを設定
-        this.errorMessage = error.response?.data?.detail || 'ログインに失敗しました。';
+        await this.login({ email: this.email, password: this.password });
+        this.$router.push('/'); // ログイン後にホームページへリダイレクト
+      } catch (error) {
+        this.errorMessage = 'Failed to login. Please check your credentials.';
       }
+    },
   },
 };
 </script>
-<style>
-#login-form{
-  text-align: center;
-}
-</style>

@@ -13,6 +13,7 @@
               <li class="home"><router-link to="/">Home</router-link></li>
               <li class="detail"><router-link to="/about/">About</router-link></li>
               <li class="profile"><router-link to="/profile">MyName</router-link></li>
+              <li class="logout"><button @click="handleLogout()">logout</button></li>
             </ul>
           </nav>
         </div>
@@ -27,6 +28,11 @@
   </template>
   
   <script>
+  // import { CustomUserLogour } from '@/services/authService';
+
+  
+
+
   export default {
     name: 'DefaultLayout',
     data() {
@@ -44,9 +50,17 @@
           alert('検索クエリを入力してください。');
         }
       },
+      async handleLogout() {
+            try {
+                await this.$store.dispatch('logout');
+                this.$router.push("/login");
+            } catch (error) {
+                console.error("Logout failed:", error);
+            }
+       },
     },
-  }
-  </script>
+  };
+</script>
   
   <style>
   /* リセットCSS */

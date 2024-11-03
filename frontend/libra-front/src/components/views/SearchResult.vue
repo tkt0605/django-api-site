@@ -6,13 +6,15 @@
         <ul>
           <div>検索結果： "{{ query }}"</div>
           <li v-for="book in books" :key="book.id">
-            <img 
+            <router-link :to="{name: 'fetchBookDetail', params:{id: book.id}}">
+                <img 
                 :src="book.volumeInfo.imageLinks.thumbnail || book.volumeInfo.imageLinks.smallThumbnail" 
                 alt="Book cover"
                 class="book-cover"
-            />
-            <strong>{{ book.volumeInfo.title }}</strong> by<em>{{ book.volumeInfo.authors?.join(', ') }}</em>
-            <button  @click='AddDatabaseBooks(book)'>AddBook</button>
+                />
+                <strong>{{ book.volumeInfo.title }}</strong> by<em>{{ book.volumeInfo.authors?.join(', ') }}</em>
+            </router-link>
+            <button @click='AddDatabaseBooks(book)'>AddBook</button>
           </li>
         </ul>
       </div>

@@ -45,11 +45,10 @@ INSTALLED_APPS = [
     'allauth',
     'allauth.account',
     'allauth.socialaccount',
-    ## django-allauth-rest
     'rest_framework',
-    'rest_framework.authtoken',  # Token認証用
-    'dj_rest_auth.registration',
     'dj_rest_auth',  # REST API経由の認証
+    'rest_framework_simplejwt.token_blacklist',
+    'rest_framework.authtoken',
     # 'mysqlclient',
 ]
 SITE_ID = 1
@@ -71,11 +70,14 @@ AUTHENTICATION_BACKENDS = [
     'allauth.account.auth_backends.AuthenticationBackend',  # allauth用バックエンド
 ]
 REST_FRAMEWORK = {
-    'DEFAULT_AUTHENTICATION_CLASSES': [
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
         'rest_framework.authentication.SessionAuthentication',
         'rest_framework.authentication.TokenAuthentication',
-        'dj_rest_auth.jwt_auth.JWTCookieAuthentication',
-    ],
+    ),
+    'DEFAULT_PERMISSION_CLASSES': (
+        'rest_framework.permissions.IsAuthenticated',
+    ),
 }
 REST_AUTH_SERIALIZERS = {
     'USER_DETAILS_SERIALIZER': 'libra.serializers.CustomUserDetairlsSerializer',
@@ -192,7 +194,8 @@ LOGIN_URL = '/accounts/login'
 LOGOUT_REDIRECT_URL = "/accounts/login"
 ACCOUNT_USERNAME_REQUIRED = False
 ACCOUNT_EMAIL_REQUIRED = True
-ACCOUNT_EMAIL_VERIFICATION = 'optional'
-ACCOUNT_AUTHENTICATION_METHOD = 'email'  # Eメールでログイン
+ACCOUNT_EMAIL_VERIFICATION = 'mandatory'
+ACCOUNT_AUTHENTICATION_METHOD = 'email'  
 ACCOUNT_USER_MODEL_USERNAME_FIELD = None
 APPEND_SLASH=False
+ACCOUNT_UNIQUE_EMAIL = True  

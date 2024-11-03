@@ -5,8 +5,8 @@ from .models import Account, CustomUser
 from rest_framework.authtoken.models import Token
 User =  get_user_model()
 @receiver(post_save, sender=get_user_model())
-def create_user_account(instance, created, **kwargs):
-    if created:
+def create_user_account(sender, instance=None, created=False, **kwargs):
+    if created and instance is not None:
         return Account.objects.create(email=instance, name=instance.username)
 
 # @receiver(post_save, sender=get_user_model())

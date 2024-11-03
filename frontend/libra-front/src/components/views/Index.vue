@@ -1,5 +1,9 @@
 <template>
   <div class="BookList">
+    <div>
+      <p v-if="$store.getters.isAuthenticated && $store.state.user">ログイン中のユーザー: {{ $store.state.user.username }}</p>
+      <p v-else>ログインしていません。</p>
+    </div>
     <ul>
       <li v-for="book in books" :key="book.id" class="list">
         <router-link :to="{name: 'fetchBookDetail', params: {id: book.id}}">
@@ -17,6 +21,7 @@
 
 <script>
 import { fetchBooks } from '@/services/apiService';
+
 export default {
     name: 'HomeIndex',
     data() {
@@ -33,7 +38,10 @@ export default {
       }catch(error){
         console.error("書籍の一覧取得エラー:", error);
       }
+      if (!this.$store.state.user) {
+        this.$store.dispatch('fetchUser');
+      }
     },
-  };
+};
 </script>
   

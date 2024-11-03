@@ -31,7 +31,7 @@ class CustomUser(AbstractUser, PermissionsMixin):
     groups = models.ManyToManyField(Group, related_name="custom_user_group", blank=True, help_text="このユーザーが所属するグループ。ユーザーは、各グループに付与されたすべての権限を取得します", related_query_name="user")
     user_permissions = models.ManyToManyField(Permission, related_name="custom_user_permissions", blank=True, help_text="このユーザーに対する特定の権限", related_query_name="user")
     USERNAME_FIELD = "email"
-    REQUIRED_FIELDS = ['username']
+    REQUIRED_FIELDS = ["username"]
     def __str__(self):
         return self.email
     @property 
@@ -41,8 +41,8 @@ class CustomUser(AbstractUser, PermissionsMixin):
     def token(self):
         return Token.objects.get_or_create(user=self)[0]
 class Account(models.Model):
-    email = models.OneToOneField(CustomUser, on_delete=models.CASCADE, related_name='Emailアドレス', blank=True, null=True, default='')
-    name = models.CharField(max_length=75, verbose_name='ユーザー名', blank=True, null=True, default='')
+    email = models.OneToOneField(CustomUser, on_delete=models.CASCADE, related_name='Emailアドレス', blank=True, null=True)
+    name = models.CharField(max_length=75, verbose_name='ユーザー名', blank=True, null=True)
     icon = models.ImageField(upload_to='icon/', verbose_name='アイコン',  default='icon/kkrn_icon_user_1.png')
     explain = models.TextField(max_length=200, verbose_name='紹介文', blank=True, null=True, default="今は公開プロフィールはありません。\nご自身についての情報を追加しましょう。")
     created_at = models.DateTimeField(default=timezone.now)

@@ -5,7 +5,7 @@ from django.contrib.auth import get_user_model
 
 class CustomUserAdmin(BaseUserAdmin):
     model = CustomUser
-    list_display = ['email', 'username', 'is_staff', 'is_active']
+    list_display = ['email', 'username', 'is_staff', 'is_active', 'is_superuser']
     list_filter = ('is_staff', 'is_active')
 
     fieldsets = (

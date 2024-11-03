@@ -25,6 +25,7 @@ import { fetchBookDetail } from '@/services/apiService';
 
 export default{
     //index.jsでのfetchBookDetailでのルーターのprops引数を持ってくる。
+    //{path: 'books/:id', name: "fetchBookDetail", component: fetchBookDetail, props: true},
     name: "fetchBookDetail",
     props: ["id"],
     data(){

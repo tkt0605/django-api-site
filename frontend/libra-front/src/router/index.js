@@ -4,7 +4,7 @@ import UserRegister from '@/components/views/Register.vue';
 import HomeIndex from "@/components/views/Index.vue";
 import AccountProfile from "@/components/views/Account.vue";
 import AuthLayout from "@/components/layout/AuthLayout.vue";
-import UserLogout from "@/components/views/Logout.vue";
+// import UserLogout from "@/components/views/Logout.vue";
 import DefaultLayout from "@/components/layout/DefaultLayout.vue";
 import SearchResult from "@/components/views/SearchResult.vue";
 import fetchBookDetail from "@/components/views/BooksDetails.vue";
@@ -27,13 +27,13 @@ const routes = [
             { path: '', redirect: '/accounts/login',},
             { path: 'login', name: 'Login', component: UserLogin },
             { path: 'register', name: 'Register', component: UserRegister},
-            { path: "logout", name: "Logout", component: UserLogout},
+            // { path: "logout", name: "Logout", component: HomeIndex},
         ],
       },
 ];
 
 const router = createRouter({
-    history: createWebHistory(),
+    history: createWebHistory(process.env.BASE_URL),
     routes,
 });
 

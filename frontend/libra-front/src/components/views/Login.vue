@@ -22,16 +22,37 @@ export default {
       errorMessage: '',
     };
   },
-  methods: {
+  computed: {
     ...mapActions(['login']),
+  },
+  methods: {
+    // async handleLogin() {
+    //   try {
+    //     await this.login({ email: this.email, password: this.password });
+    //     this.$router.push('/'); // ログイン後にホームページへリダイレクト
+    //   } catch (error) {
+    //     this.errorMessage = 'Failed to login. Please check your credentials.';
+    //   }
+    // },
     async handleLogin() {
-      try {
-        await this.login({ email: this.email, password: this.password });
-        this.$router.push('/'); // ログイン後にホームページへリダイレクト
-      } catch (error) {
-        this.errorMessage = 'Failed to login. Please check your credentials.';
+    try {
+      // ログインを試みる
+      const response = await this.$store.dispatch('login', {
+        email: this.email,
+        password: this.password
+      });
+
+      // ログインが成功した場合にリダイレクト
+      if (response && response.access) {
+        this.$router.push('/');  // ログイン後のリダイレクト先
+      } else {
+        this.errorMessage = "Failed to login. Please check your credentials.";
       }
-    },
+    } catch (error) {
+      console.error("Failed to login:", error);
+      this.errorMessage = "Failed to login. Please check your credentials.";
+    }
+  }
   },
 };
 </script>

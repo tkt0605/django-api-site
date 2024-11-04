@@ -6,6 +6,7 @@ import axios from 'axios';
 const store = createStore({
   state: {
     user: null,
+
     token: localStorage.getItem('token') || null,
   },
   mutations: {
@@ -63,15 +64,19 @@ const store = createStore({
     },
     async fetchUser({ commit }) {
       try {
-        const userData = await fetchUser();
-        commit('setUser', userData);
-        return userData;
+        const user = await fetchUser();
+        commit('setUser', user);
+        return user;
       } catch (error) {
         console.error("Fetch User Error:", error);
         throw error;
       }
     },
   },
+  getters: {
+    user: (state) => state.user && state.user.is_superuser,
+    isAuthenticated: (state) => state.isAuthenticated,
+  }
 });
 
 export default store;

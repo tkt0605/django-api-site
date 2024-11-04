@@ -42,3 +42,6 @@ export function OrderList(){
 export function orderDetail(orderId) {
   return appClient.get(`order/${orderId}`);
 }
+export function AccountProfile(userName) {
+  return appClient.get(`profile/${userName}`);
+}

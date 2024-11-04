@@ -14,7 +14,7 @@ const routes = [
         component: DefaultLayout, // デフォルトページ専用のレイアウト
         children: [
             {path: "", name: 'Index', component: HomeIndex},
-            {path: "profile", name: "account", component: AccountProfile},
+            {path: "profile/:name", name: "account", component: AccountProfile, props: true},
             { path: 'search', name: "SearchResult", component: SearchResult, props: (route) => ({ query: route.query.q })},
             {path: 'books/:id', name: "fetchBookDetail", component: fetchBookDetail, props: true},
         ],

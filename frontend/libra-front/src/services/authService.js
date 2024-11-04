@@ -1,19 +1,19 @@
 import axios from "axios";
-const API_URL = 'http://localhost:8000/api/auth/';
-export async function refreshToken() {
-  const refreshToken = localStorage.getItem('refresh_token');
-  try{
-    const response = await axios.post(`${API_URL}token/refresh/`, {
-      refresh: refreshToken,
-    });
-    const newAccessToken = response.data.access;
-    localStorage.setItem('token', newAccessToken);
-    return newAccessToken;
-  }catch(error){
-    console.error("Error Create NewAccessToken:", error.message);
-    return null;
-  }
-}
+// const API_URL = 'http://localhost:8000/api/auth/';
+// export async function refreshToken() {
+//   const refreshToken = localStorage.getItem('refresh_token');
+//   try{
+//     const response = await axios.post(`${API_URL}token/refresh/`, {
+//       refresh: refreshToken,
+//     });
+//     const newAccessToken = response.data.access;
+//     localStorage.setItem('token', newAccessToken);
+//     return newAccessToken;
+//   }catch(error){
+//     console.error("Error Create NewAccessToken:", error.message);
+//     return null;
+//   }
+// }
 export async function searchBooks(query){
   try{
     const response = await axios.get('http://localhost:8000/api/search/',
@@ -33,20 +33,6 @@ export async function searchBooks(query){
   }
 }
 
-//新規アカウント作成のコード
-// export async function register(username, email, password1, password2) {
-//   try{
-//     const response =  await axios.post('http://localhost:8000/api/accounts/register/', {
-//       emial: email,
-//       username: username,
-//       password1: password1,
-//       password2: password2,
-//     });
-//     return response.data;
-//   } catch (error) {
-//     console.error('Register Error:', error.message);
-//   }
-// }
 export async function register({email, username, password}) {
   try{
     const response = await axios.post('http://localhost:8000/api/accounts/register/', {
@@ -71,10 +57,12 @@ export async function login(email, password) {
       password: password
     });
     console.log("Login Response:", response.data);
-    if (response.data.access &&  response.data.refresh){
-      localStorage.setItem('token', response.data.access);
-      localStorage.setItem('refresh_token', response.data.refresh);
-      axios.defaults.headers.common['Authorization'] = `Bearer ${response.data.access}`;
+    const { access, refresh } = response.data;
+    if (access &&  refresh){
+      localStorage.setItem('token', access);
+      localStorage.setItem('refresh_token', refresh);
+      axios.defaults.headers.common['Authorization'] = `Bearer ${access}`;
+      console.log("Token stored and Authorization header set.");
       return response.data
     }
   } catch (error){
@@ -113,7 +101,7 @@ export async function logout() {
 export async function fetchUser() {
   const token = localStorage.getItem('token'); // ログイン時に保存したJWTトークンを取得
   try {
-      const response = await axios.get('http://localhost:8000/api/users/', {
+      const response = await axios.get('http://localhost:8000/api/accounts/profile/', {
           headers: {
               Authorization: `Bearer ${token}`,
           },
@@ -123,5 +111,52 @@ export async function fetchUser() {
   } catch (error) {
       console.error("ユーザー情報の取得に失敗しました:", error);
       throw error;
+  }
+}
+
+
+export async function refreshToken() {
+  const refreshToken = localStorage.getItem('refresh_token');  // リフレッシュトークンを取得
+  if (refreshToken) {
+    try {
+      const response = await axios.post('http://localhost:8000/api/accounts/token/refresh/', {
+        refresh: refreshToken
+      });
+      const newAccessToken = response.data.access;
+      localStorage.setItem('token', newAccessToken);  // 新しいアクセストークンを保存
+      return newAccessToken;
+    } catch (error) {
+      console.error("Token refresh failed:", error);
+      return null;
+    }
+  }
+  return null;
+}
+
+// 認証付きでユーザー情報を取得
+export async function fetchUserWithAuth() {
+  let token = localStorage.getItem('token');
+
+  if (!token) {
+    token = await refreshToken();  // アクセストークンがない場合にリフレッシュを試みる
+    if (!token) {
+      throw new Error("Authentication failed. Please log in again.");
+    }
+  }
+
+  try {
+    const response = await axios.get('http://localhost:8000/api/accounts/profile/', {
+      headers: { Authorization: `Bearer ${token}` }
+    });
+    return response.data;
+  } catch (error) {
+    if (error.response && error.response.status === 401) {
+      // アクセストークンが無効だった場合、リフレッシュを試みる
+      token = await refreshToken();
+      if (token) {
+        return await fetchUserWithAuth();  // 新しいトークンで再リクエスト
+      }
+    }
+    throw error;
   }
 }

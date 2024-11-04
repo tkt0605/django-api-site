@@ -4,7 +4,11 @@
         <div class='headline'>
           <div class="logo"><b>Libra</b></div> 
           <!-- フォームのsubmitイベントがデフォルトではページをリロードしてしまいます。それを防ぐために、@submit.preventを使います。 -->
-          <form class="search-form"  @submit.prevent="search">
+          <form v-if="isSuperUser" class="search-form"  @submit.prevent="search">
+            <input  v-model="query" type="text" placeholder="本を検索..." class="search-input"/>
+            <button type="submit" class="search-button">🔍</button>
+          </form>
+          <form v-else class="search-form" >
             <input  v-model="query" type="text" placeholder="本を検索..." class="search-input"/>
             <button type="submit" class="search-button">🔍</button>
           </form>
@@ -12,8 +16,11 @@
             <ul class="head">
               <li class="home"><router-link to="/">Home</router-link></li>
               <li class="detail"><router-link to="/about/">About</router-link></li>
-              <li class="profile"><router-link to="/profile">MyName</router-link></li>
-              <li class="logout"><button @click="handleLogout()">logout</button></li>
+              <li class="profile">
+                <router-link v-if="isAuthenticated" to="/profile">{{ user.username }}</router-link>
+                <button v-else @click="handleLogout()">logout</button>
+              </li>
+              <!-- <li class="logout"><button @click="handleLogout()">logout</button></li> -->
             </ul>
           </nav>
         </div>
@@ -32,7 +39,7 @@
 
   // import axios from 'axios';
 
-
+  import { mapGetters } from "vuex";
   export default {
     name: 'DefaultLayout',
     data() {
@@ -40,7 +47,15 @@
         error: '',
         query: '',
         books: [],
+        isAuthenticated: false,
+        user: null  // userを初期化
       };
+    },
+    computed: {
+        ...mapGetters(['user', 'isAuthenticated']),
+        isSuperUser() {
+            return this.user && this.user.is_superuser;
+        }
     },
     methods: {
       async search() {

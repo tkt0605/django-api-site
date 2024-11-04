@@ -19,8 +19,8 @@ from django.urls import path, include
 from django.conf import settings
 from django.conf.urls.static import static
 # from rest_framework import routers
-from libra import views as libra_views
-from accounts import views as accpunts_views
+# from libra import views 
+# from accounts import views
 from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
 from rest_framework import routers
 router = routers.DefaultRouter()

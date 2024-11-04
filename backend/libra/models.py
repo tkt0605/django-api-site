@@ -13,7 +13,7 @@ from django.utils import timezone
 class Book(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     title = models.CharField(max_length=50, verbose_name='タイトル')
-    image = models.ImageField(upload_to='image/', verbose_name="表紙", null=True,blank=True)
+    image = models.URLField(max_length=200, verbose_name="表紙", blank=True, null=True) 
     publisher = models.CharField(max_length=255, verbose_name="出版社")  
     publish_date = models.DateField()
     author = models.CharField(max_length=100, verbose_name='作者')

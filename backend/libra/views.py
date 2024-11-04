@@ -7,7 +7,7 @@ from django.http import JsonResponse
 from rest_framework import viewsets, generics
 from .models import Book, Order
 from accounts.models import CustomUser, Account
-from .serializers import BookSerializer, OrderSerializer, AccountSerializr, CustomUserSerializr
+from .serializers import BookSerializer, OrderSerializer
 from django.views.decorators.csrf import csrf_exempt
 from rest_framework.decorators import api_view
 import uuid
@@ -56,12 +56,6 @@ class BookViewSet(viewsets.ModelViewSet):
 class OrderViewSet(viewsets.ModelViewSet):
     queryset = Order.objects.all()
     serializer_class = OrderSerializer
-class CustomUserViewSet(viewsets.ModelViewSet):
-    queryset = CustomUser.objects.all()
-    serializer_class = CustomUserSerializr
-class AccountViewSet(viewsets.ModelViewSet):
-    queryset = Account.objects.all()
-    serializer_class = AccountSerializr
 def get_isbn(book):
     identifiers = book.get('book.volumeInfo', {}).get('industryIdentifiers', [])
     isbn_data = {identifier['type']: identifier['identifier'] for identifier in identifiers}
@@ -78,9 +72,3 @@ class OrderListView(generics.ListCreateAPIView):
 class OrderDetailView(generics.RetrieveUpdateDestroyAPIView):
     queryset = Order.objects.all()
     serializer_class = OrderSerializer
-class CustomUserListViews(generics.ListCreateAPIView):
-    queryset = CustomUser.objects.all()
-    serializer_class = CustomUserSerializr
-class AccountListViews(generics.ListCreateAPIView):
-    queryset = Account.objects.all()
-    serializer_class = AccountSerializr

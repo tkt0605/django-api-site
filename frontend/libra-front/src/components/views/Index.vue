@@ -1,7 +1,7 @@
 <template>
   <div class="BookList">
     <div>
-      <p v-if="$store.getters.isAuthenticated && $store.state.user">ログイン中のユーザー: {{ $store.state.user.username }}</p>
+      <p v-if="isAuthenticated">Welcome, {{ user.username }}</p>
       <p v-else>ログインしていません。</p>
     </div>
     <ul>
@@ -21,7 +21,7 @@
 
 <script>
 import { fetchBooks } from '@/services/apiService';
-
+import axios from 'axios';
 export default {
     name: 'HomeIndex',
     data() {
@@ -29,19 +29,50 @@ export default {
         error: '',
         // query: '',
         books: [],
+        isAuthenticated: false,
       };
     },
     async created() {
       try{
         const response = await fetchBooks();
+        this.checkAuthStatus()
         this.books = response.data;
       }catch(error){
         console.error("書籍の一覧取得エラー:", error);
       }
-      if (!this.$store.state.user) {
-        this.$store.dispatch('fetchUser');
-      }
     },
+    methods: {
+      async checkAuthStatus() {
+        const token = localStorage.getItem('access_token')
+        if (token) {
+          try {
+            const response = await axios.get('http://localhost:8000/api/accounts/profile/', {
+              headers: {
+                Authorization: `Bearer ${token}`
+              }
+            })
+            this.user = response.data
+            this.isAuthenticated = true
+            console.log(this.user);
+          } catch (error) {
+            console.error("Authentication failed:", error)
+            this.isAuthenticated = false
+          }
+        } else {
+          this.isAuthenticated = false
+        }
+      },
+      async login() {
+        // ログイン処理
+        this.checkAuthStatus()
+      },
+      logout() {
+        localStorage.removeItem('access_token')
+        localStorage.removeItem('refresh_token')
+        this.isAuthenticated = false
+        this.user = null
+      }
+    }
 };
 </script>
   

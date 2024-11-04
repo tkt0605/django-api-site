@@ -34,22 +34,39 @@ export async function searchBooks(query){
 }
 
 //新規アカウント作成のコード
-export async function register(username, email, password1, password2) {
+// export async function register(username, email, password1, password2) {
+//   try{
+//     const response =  await axios.post('http://localhost:8000/api/accounts/register/', {
+//       emial: email,
+//       username: username,
+//       password1: password1,
+//       password2: password2,
+//     });
+//     return response.data;
+//   } catch (error) {
+//     console.error('Register Error:', error.message);
+//   }
+// }
+export async function register({email, username, password}) {
   try{
-    const response =  await axios.post(`${API_URL}registration/`, {
-      emial: email,
+    const response = await axios.post('http://localhost:8000/api/accounts/register/', {
+      email: email,
       username: username,
-      password1: password1,
-      password2: password2,
+      password: password,
+    },{
+      headers: {
+        'Content-Type': 'application/json'  // JSON形式でデータを送信
+      }
     });
     return response.data;
-  } catch (error) {
-    console.error('Register Error:', error.message);
+  }catch(error){
+    console.error("Register Error:",  error.response?.data);
+    throw error; // エラーを上位に伝搬
   }
 }
 export async function login(email, password) {
   try{
-    const response = await axios.post(`${API_URL}login/`, {
+    const response = await axios.post('http://localhost:8000/api/accounts/login/', {
       email: email,
       password: password
     });
@@ -64,26 +81,39 @@ export async function login(email, password) {
     console.error("Login Error", error.message);
   }
 }
+
 export async function logout() {
-  try{
-    const response = await axios.post(`${API_URL}logout/`, {}, {
-      headers:{
-        Authorization: `Bearer ${localStorage.getItem('token')}`
+  try {
+    const refreshToken = localStorage.getItem('refresh_token');  // refresh_tokenを取得
+    if (!refreshToken) {
+      console.error("No refresh token found");
+      return;
+    }
+
+    const response = await axios.post(
+      'http://localhost:8000/api/accounts/logout/',
+      { refresh: refreshToken },  // refreshトークンをリクエストボディに追加
+      {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem('token')}`
+        }
       }
-    });
+    );
+
     localStorage.removeItem('token');
     localStorage.removeItem('refresh_token');
     delete axios.defaults.headers.common['Authorization'];
     return response.data;
-  }catch(error){
+  } catch (error) {
     console.error("Logout Error:", error.message);
   }
 }
 
+
 export async function fetchUser() {
   const token = localStorage.getItem('token'); // ログイン時に保存したJWTトークンを取得
   try {
-      const response = await axios.get(`${API_URL}user/`, {
+      const response = await axios.get('http://localhost:8000/api/users/', {
           headers: {
               Authorization: `Bearer ${token}`,
           },

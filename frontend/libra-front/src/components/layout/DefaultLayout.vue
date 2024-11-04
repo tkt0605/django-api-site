@@ -30,7 +30,7 @@
   <script>
   // import { CustomUserLogour } from '@/services/authService';
 
-  
+  // import axios from 'axios';
 
 
   export default {
@@ -57,8 +57,8 @@
             } catch (error) {
                 console.error("Logout failed:", error);
             }
-       },
-    },
+      },
+    }
   };
 </script>
   

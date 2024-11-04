@@ -7,14 +7,14 @@ from rest_framework_simplejwt.views import (
     TokenRefreshView,
     TokenVerifyView,
 )
-from .views import RegisterView, LogoutView
+from .views import RegisterView, LogoutView, ProfileView
 
 urlpatterns = [
     path('register/', RegisterView.as_view(), name='auth_register'),
-    path('token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
-    path('token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
-    path('token/verify/', TokenVerifyView.as_view(), name='token_verify'),
     path('logout/', LogoutView.as_view(), name='auth_logout'),
+    path('login/', TokenObtainPairView.as_view(), name='auth_login'),
+    path('token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
+    path('profile/', ProfileView.as_view(), name='profile'),
 ]
 
 if settings.DEBUG:

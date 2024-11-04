@@ -27,6 +27,7 @@ router = routers.DefaultRouter()
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('api/', include("libra.urls")),
+    path('api/accounts/',include('accounts.urls')),
     path("api/auth/", include("dj_rest_auth.urls")),
     path('api/auth/token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),  # ログインでアクセストークン取得
     path('api/auth/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),  # トークンのリフレッシュ, http://localhost:8000/api/auth/registration/

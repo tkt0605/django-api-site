@@ -1,45 +1,58 @@
-# from django.shortcuts import render
-# from rest_framework.views import APIView
-# from rest_framework.response import Response
-# from rest_framework import status
-# from django.views.decorators.csrf import csrf_exempt
-# from .serializers import CustomUser, CustomUserDetailsSerializer
-# @csrf_exempt
-# class LoginView(APIView):
-#     def post(self, request, *args, **kwargs):
-#         email = request.data.get['email']
-#         password = request.data.get['password']
-#         if email == "takatokomada@gmail.com" and password == "20050605":
-#             return Response({"message": "Login successful"}, status=status.HTTP_200_OK)
-#         return Response({"message": "Login Error"}, status=status.HTTP_401_UNAUTHORIZED)
-# views.py
-# from django.contrib.auth.models import User
 from .models import CustomUser, Account
-from rest_framework import status
+# accounts/views.py
+from rest_framework import generics, status
 from rest_framework.response import Response
-from rest_framework.views import APIView
-from rest_framework.permissions import AllowAny
 from rest_framework_simplejwt.tokens import RefreshToken
+from rest_framework.views import APIView
 from .serializers import UserSerializer
+# from django.contrib.auth.models import User
+from rest_framework.permissions import IsAuthenticated, AllowAny
 
-class RegisterView(APIView):
+class ProfileView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request):
+        user = request.user
+        serializer = UserSerializer(user)
+        return Response(serializer.data)
+# ユーザー登録ビュー
+# class RegisterView(generics.CreateAPIView):
+#     queryset = CustomUser.objects.all()
+#     serializer_class = UserSerializer
+#     permission_classes = [AllowAny]
+
+#     def post(self, request, *args, **kwargs):
+#         serializer = self.get_serializer(data=request.data)
+#         if serializer.is_valid():
+#             self.perform_create(serializer)
+#             return Response(serializer.data, status=status.HTTP_201_CREATED)
+#         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST) 
+class RegisterView(generics.CreateAPIView):
+    queryset = CustomUser.objects.all()
+    serializer_class = UserSerializer
     permission_classes = [AllowAny]
 
-    def post(self, request):
-        serializer = UserSerializer(data=request.data)
+    def post(self, request, *args, **kwargs):
+        print("Received data:", request.data)  # リクエストデータを表示
+        serializer = self.get_serializer(data=request.data)
         if serializer.is_valid():
-            serializer.save()
+            self.perform_create(serializer)
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+# ログアウトビュー
+# accounts/views.py
 
 class LogoutView(APIView):
-    permission_classes = [AllowAny]
+    permission_classes = [IsAuthenticated]
 
     def post(self, request):
         try:
-            refresh_token = request.data["refresh"]
+            refresh_token = request.data.get("refresh")
+            if refresh_token is None:
+                return Response({"error": "Refresh token is required"}, status=status.HTTP_400_BAD_REQUEST)
+
             token = RefreshToken(refresh_token)
             token.blacklist()
             return Response(status=status.HTTP_205_RESET_CONTENT)
         except Exception as e:
-            return Response(status=status.HTTP_400_BAD_REQUEST)
+            return Response({"error": str(e)}, status=status.HTTP_400_BAD_REQUEST)

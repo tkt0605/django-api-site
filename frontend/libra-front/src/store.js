@@ -26,9 +26,12 @@ const store = createStore({
     },
   },
   actions: {
-    async register({ commit }, { username, email, password1, password2 }) {
+    async register({ commit }, { email, username, password1, password2 }) {
+      if (password1 !== password2) {
+            throw new Error("Passwords do not match");  // パスワードが一致しない場合の処理
+        }
       try {
-        const response = await register(username, email, password1, password2);
+        const response = await register({email, username, password: password1});
         commit('setUser', response.user); // 登録後にユーザー情報が返ってくる場合
         return response;
       } catch (error) {

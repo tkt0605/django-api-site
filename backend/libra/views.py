@@ -31,7 +31,11 @@ def add_book(request):
         book_instance.save()
         return  Response(serializer.data, status=201)
     return Response(serializer.errors, status=400)
-
+@api_view(['GET'])
+def check_book(request, isbn):
+    # 指定されたISBNでデータベースを検索
+    is_add = Book.objects.filter(isbn_13=isbn).exists() or Book.objects.filter(isbn_10=isbn).exists()
+    return Response({'is_added': is_add})
 def google_books_search(request):
     query = request.GET.get('q')
     if not query:

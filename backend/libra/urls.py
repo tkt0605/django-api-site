@@ -16,6 +16,7 @@ urlpatterns = [
       path('books/<uuid:pk>', views.BooksDeatilView.as_view(), name='bookdetails'),
       path("orders/", views.OrderListView.as_view(), name="orderlist"),
       path('orders/<uuid:pk>', views.OrderDetailView.as_view(), name='orderdetail'),
+      path('check_book/<str:isbn>/', views.check_book, name='check_book'),
       path('', include(router.urls))
 ]
 if settings.DEBUG:

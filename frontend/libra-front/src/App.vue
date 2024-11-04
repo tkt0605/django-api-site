@@ -13,6 +13,9 @@ export default {
       // query: '',
     };
   },
+  async created() {
+    await this.$store.dispatch('fetchUser');
+  },
   // methods: {
   //     async search() {
   //       if (this.query) {

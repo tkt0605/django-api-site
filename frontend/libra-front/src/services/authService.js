@@ -107,6 +107,7 @@ export async function fetchUser() {
           },
           withCredentials: true,
       });
+      console.log("fetchUser response: ", response.data);
       return response.data;
   } catch (error) {
       console.error("ユーザー情報の取得に失敗しました:", error);

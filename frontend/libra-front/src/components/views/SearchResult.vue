@@ -15,12 +15,14 @@
                 <strong>{{ book.volumeInfo.title }}</strong> by<em>{{ book.volumeInfo.authors?.join(', ') }}</em>
             </router-link>
             <div v-if="isSuperUser">
-                <div class="stock-container">
-                    <label for="stock">在庫数:</label>
-                    <input type="number" v-model="book.stock" min="0" class="stock-input" placeholder="在庫数" />
+                <div v-if="!book.is_added">
+                    <div class="stock-container">
+                        <label for="stock">在庫数:</label>
+                        <input type="number" v-model="book.stock" min="0" class="stock-input" placeholder="在庫数" />
+                    </div>
+                    <button class="add_button" @click='AddDatabaseBooks(book)'>AddBook</button>
                 </div>
-                <button v-if="book.is_added" class="always-btn">alwaysAdd</button>
-                <button v-else @click='AddDatabaseBooks(book)'>AddBook</button>
+                <button v-else class="always-btn">alwaysAdd</button>
             </div>
           </li>
         </ul>
@@ -40,20 +42,24 @@ export default {
         return{
             books: [],
             error: '',
-            isAuthenticated: false,
-            user: null  // userを初期化
         }
     },
     computed: {
         ...mapGetters(['user', 'isAuthenticated']),
         isSuperUser() {
+            console.log("User object:", this.user);
+            // console.log("Is SuperUser:", this.user ? this.user.is_superuser : 'No user data');
             return this.user && this.user.is_superuser;
-        }
+        },
     },
     created() {
+
         if (!this.user) {
-            // ページ表示時にユーザー情報がない場合は取得
-            this.$store.dispatch('fetchUser');
+            this.$store.dispatch('fetchUser').then(() => {
+                if (!this.user) {
+                    console.log("User information not loaded");
+                }
+            });
         }
     },
     watch:{
@@ -81,11 +87,17 @@ export default {
             return `${year}-${month}-${day}`
         },
         async checkIfBookAdded(book) {
-            // ここでAPIから既に追加されているか確認する処理を行います。
-            // 例えば、ISBNでデータベースに問い合わせて存在確認する。
             try {
-                const response = await axios.get(`http://localhost:8000/api/check_book/${book.isbn_13}`);
-                return response.data.is_added; // 例えば `true` または `false` が返るとします
+                const isbn = book.isbn_13 || book.isbn_10;
+                if (!isbn) {
+                    console.error("No ISBN available in book data");
+                    return false;
+                }
+                console.log(isbn);
+                // const response = await axios.get('http://localhost:8000/api/check_book/', {is_added: book});
+                const response = await axios.get(`http://localhost:8000/api/check_book/${isbn}/`);
+                console.log("API response for is_added:", response.data.is_added);
+                return response.data.is_added;
             } catch (error) {
                 console.error("Error checking book:", error);
                 return false;
@@ -101,7 +113,7 @@ export default {
                 const data = await searchBooks(query);
                 console.log("APIからのデータ: ", data);
                 if (data.items && data.items.length){
-                    this.books =  data.items;
+                    this.books = data.items;
                     this.error = '';
                 }else{
                     this.error = `「${query}」に一致する本が見つかりませんでした。`;
@@ -119,12 +131,9 @@ export default {
                     return;
                 }
                 console.log('book: ', book)
-                // console.log('ISBN: ', book.volumeInfo?.industryIdentifiers);
-                // const csrftoken = this.getCSRFToken(); // 作成したcsrfTokenの取得
                 const isbnData13 = book.volumeInfo.industryIdentifiers?.find((id)=> id.type==='ISBN_13') || {};
                 const isbnData10 = book.volumeInfo.industryIdentifiers?.find((id)=> id.type==='ISBN_10') || {};
                 const formatDateYMD = book.volumeInfo.publishedDate ? this.formatDateYMD(book.volumeInfo.publishedDate) : '1990-10-20';
-                // const image_file = book.volumeInfo?.imageLinks.thumbnail || null;
                 const newBook ={
                     title: book.volumeInfo?.title,
                     image: book.volumeInfo?.imageLinks?.thumbnail || null,
@@ -143,9 +152,9 @@ export default {
                 await axios.post('http://localhost:8000/api/book/', newBook, {
                     headers:{
                         "Content-Type": 'multipart/form-data',
-                        // "X-CSRFToken": csrftoken,
+
                     },
-                    // withCredentials: true,
+
                 });
                 alert('Book added!');     
                           
@@ -159,9 +168,110 @@ export default {
 };
 </script>
   
-  <style>
-  .error {
-    color: red;
-  }
-  </style>
+<style>
+/* General Styling */
+/* Error Message */
+.error {
+  color: #d9534f;
+  background-color: #f2dede;
+  padding: 10px;
+  border: 1px solid #ebccd1;
+  border-radius: 5px;
+  margin-bottom: 15px;
+  text-align: center;
+}
+
+/* Search Result Text */
+div > div:first-child {
+  font-size: 1.2em;
+  font-weight: bold;
+  margin-bottom: 20px;
+  color: #333;
+}
+
+/* Book List */
+ul {
+  list-style: none;
+  padding: 0;
+}
+
+li {
+  display: flex;
+  align-items: center;
+  padding: 15px;
+  background: #fff;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  margin-bottom: 15px;
+  transition: transform 0.2s;
+}
+
+li:hover {
+  transform: translateY(-5px);
+}
+
+/* Book Cover */
+.book-cover {
+  width: 60px;
+  height: 90px;
+  border-radius: 4px;
+  margin-right: 15px;
+}
+
+/* Book Title and Author */
+strong {
+  font-size: 1.1em;
+  color: #333;
+}
+
+em {
+  font-size: 0.9em;
+  color: #777;
+}
+
+/* Stock Input and Button Container */
+.stock-container {
+  display: flex;
+  align-items: center;
+  margin-top: 10px;
+}
+
+.stock-input {
+  width: 60px;
+  padding: 5px;
+  margin-left: 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 0.9em;
+}
+
+/* Add Book Button */
+.add_button {
+  padding: 8px 12px;
+  margin-top: 10px;
+  background-color: #5cb85c;
+  border: none;
+  border-radius: 4px;
+  color: #fff;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.add_button:hover {
+  background-color: #4cae4c;
+}
+
+/* Already Added Button */
+.always-btn {
+  background-color: #0275d8;
+  cursor: default;
+}
+
+.always-btn:hover {
+  background-color: #0275d8;
+}
+
+</style>
   

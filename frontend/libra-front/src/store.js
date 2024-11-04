@@ -6,7 +6,6 @@ import axios from 'axios';
 const store = createStore({
   state: {
     user: null,
-
     token: localStorage.getItem('token') || null,
   },
   mutations: {
@@ -62,21 +61,33 @@ const store = createStore({
         throw error;
       }
     },
+    // async fetchUser({ commit }) {
+    //   try {
+    //     const user = await fetchUser();
+    //     commit('setUser', user);
+    //     return user;
+    //   } catch (error) {
+    //     console.error("Fetch User Error:", error);
+    //     throw error;
+    //   }
+    // },
     async fetchUser({ commit }) {
-      try {
-        const user = await fetchUser();
-        commit('setUser', user);
-        return user;
-      } catch (error) {
-        console.error("Fetch User Error:", error);
-        throw error;
+        try {
+          const user = await fetchUser();
+          console.log("Fetched User:", user);  // ここで is_superuser が含まれることを確認
+          commit('setUser', user);
+          return user;
+        } catch (error) {
+          console.error("Fetch User Error:", error);
+          throw error;
+        }
       }
-    },
   },
   getters: {
-    user: (state) => state.user && state.user.is_superuser,
+    user: (state) => state.user,
     isAuthenticated: (state) => state.isAuthenticated,
   }
 });
 
 export default store;
+// store.js

@@ -4,14 +4,18 @@
         <div class='headline'>
           <div class="logo"><b>Libra</b></div> 
           <!-- フォームのsubmitイベントがデフォルトではページをリロードしてしまいます。それを防ぐために、@submit.preventを使います。 -->
-          <form v-if="isSuperUser" class="search-form"  @submit.prevent="search">
-            <input  v-model="query" type="text" placeholder="本を検索..." class="search-input"/>
-            <button type="submit" class="search-button">🔍</button>
-          </form>
-          <form v-else class="search-form" >
-            <input  v-model="query" type="text" placeholder="本を検索..." class="search-input"/>
-            <button type="submit" class="search-button">🔍</button>
-          </form>
+          <div v-if="isSuperUser">
+            <form class="search-form"  @submit.prevent="search">
+              <input  v-model="query" type="text" placeholder="本を検索..." class="search-input"/>
+              <button type="submit" class="search-button">🔍</button>
+            </form>
+          </div>
+          <div v-else>
+            <form class="search-form" >
+              <input  v-model="query" type="text" placeholder="本を検索..." class="search-input"/>
+              <button type="submit" class="search-button">🔍</button>
+            </form>
+          </div>
           <nav> 
             <ul class="head">
               <li class="home"><router-link to="/">Home</router-link></li>
@@ -34,27 +38,40 @@
     </div>
   </template>
   
-  <script>
+<script>
   // import { CustomUserLogour } from '@/services/authService';
 
   // import axios from 'axios';
 
-  import { mapGetters } from "vuex";
-  export default {
-    name: 'DefaultLayout',
-    data() {
-      return{
-        error: '',
-        query: '',
-        books: [],
-        isAuthenticated: false,
-        user: null  // userを初期化
-      };
-    },
+import { mapGetters } from "vuex";
+export default {
+  name: 'DefaultLayout',
+  data() {
+    return{
+      error: '',
+      query: '',
+      books: [],
+    };
+  },
     computed: {
-        ...mapGetters(['user', 'isAuthenticated']),
-        isSuperUser() {
+      ...mapGetters(['user', 'isAuthenticated']),
+      isSuperUser() {
+            console.log("User:", this.user);
+            // console.log("Is SuperUser:", this.user.is_superuser);
             return this.user && this.user.is_superuser;
+        },
+    },
+    created() {
+        // if (!this.user) {
+        //     // ページ表示時にユーザー情報がない場合は取得
+        //     this.$store.dispatch('fetchUser');
+        // }
+        if (!this.user) {
+            this.$store.dispatch('fetchUser').then(() => {
+                if (!this.user) {
+                    console.log("User information not loaded");
+                }
+            });
         }
     },
     methods: {
@@ -78,28 +95,6 @@
 </script>
   
   <style>
-  /* リセットCSS */
-  * {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-    font-family: 'Arial', sans-serif;
-  }
-  
-  /* ページ全体の背景 */
-  body {
-    background-color: #f5f5f5;
-    color: #333;
-    line-height: 1.6;
-  }
-  
-  /* アプリ全体のスタイル */
-  #app {
-    display: flex;
-    flex-direction: column;
-    min-height: 100vh;
-  }
-  
   /* ヘッダーのデザイン */
   header {
     background-color: #4a90e2;

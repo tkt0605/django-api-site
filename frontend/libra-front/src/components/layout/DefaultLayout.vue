@@ -1,22 +1,22 @@
 <template>
-    <div id='app'>
-      <header>
+    <div id='default'>
+      <header class='header'>
         <div class='headline'>
-          <div class="logo"><b>Libra</b></div> 
+          <div class="logo"><b>Library</b></div> 
           <!-- フォームのsubmitイベントがデフォルトではページをリロードしてしまいます。それを防ぐために、@submit.preventを使います。 -->
-          <div v-if="isSuperUser">
+          <div class='search-div' v-if="isSuperUser">
             <form class="search-form"  @submit.prevent="search">
               <input  v-model="query" type="text" placeholder="本を検索..." class="search-input"/>
               <button type="submit" class="search-button">🔍</button>
             </form>
           </div>
-          <div v-else>
+          <div class='search-div' v-else>
             <form class="search-form" >
               <input  v-model="query" type="text" placeholder="本を検索..." class="search-input"/>
               <button type="submit" class="search-button">🔍</button>
             </form>
           </div>
-          <nav> 
+          <nav class='nav'> 
             <ul class="head">
               <li class="home"><router-link to="/">Home</router-link></li>
               <li class="detail"><router-link to="/about/">About</router-link></li>
@@ -29,11 +29,11 @@
           </nav>
         </div>
       </header>
-      <main>
+      <main class='main'>
         <router-view />  
       </main>
-      <footer>
-        <p>&copy; 2024 Libra </p>
+      <footer class='footer'>
+        <p class='p-line'>&copy; 2024 Libra </p>
       </footer>
     </div>
   </template>
@@ -94,9 +94,14 @@ export default {
   };
 </script>
   
-  <style>
-  /* ヘッダーのデザイン */
-  header {
+<style>
+/* Default Layout */
+#default {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+header {
     background-color: #4a90e2;
     padding: 15px 30px;
     color: white;
@@ -114,19 +119,14 @@ export default {
     font-weight: bold;
     letter-spacing: 2px;
   }
-  .search-input{
+  input[type="text"].search-input{
     padding: 8px 12px;
     border: 1px solid #ccc;
     border-radius: 4px;
     font-size: 16px;
-    width: 200px;
-    margin-left: 100px;
-    transition: width 0.3s ease;
-  }
-  .search-input:focus {
     width: 500px;
-    border-color: #4a90e2;
-    outline: none;
+    margin-left: 50px;
+    transition: width 0.3s ease;
   }
   .search-button{
     background-color: #4a90e2;
@@ -142,7 +142,7 @@ export default {
     background-color: #63a7f5;
   }
   /* ナビゲーションスタイル */
-  nav ul {
+  /* nav ul {
     list-style: none;
     display: flex;
     gap: 15px;
@@ -163,7 +163,7 @@ export default {
   nav a:hover {
     color: #e0e0e0;
   }
-  
+   */
   /* メインコンテンツエリア */
   main {
     flex: 1;
@@ -197,6 +197,5 @@ export default {
       margin: 10px;
     }
   }
-  
-  </style>
+</style>
   

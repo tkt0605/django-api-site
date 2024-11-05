@@ -30,4 +30,17 @@ export default {
 </script>
 
 <style>
+/* Base Styling */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Roboto', sans-serif;
+  background-color: #f9fafb;
+  color: #333;
+  line-height: 1.6;
+}
 </style>

@@ -7,10 +7,8 @@
                 <p><strong>Author:</strong> {{ book.author }}</p>
                 <p><strong>Publisher:</strong> {{ book.publisher }}</p>
                 <p><strong>Published Date:</strong> {{ book.publish_date }}</p>
-                <p><strong>ISBN-10:</strong> {{ book.isbn_10 }}</p>
-                <p><strong>ISBN-13:</strong> {{ book.isbn_13 }}</p>
+                <p><strong>Stock:</strong> {{ book.stock }}</p>
                 <p><strong>Language:</strong> {{ book.language }}</p>
-                <p><strong>Price:</strong> ${{ book.price }}</p>
             </div>
             <div v-else>
                 <p>Loading book details...</p>

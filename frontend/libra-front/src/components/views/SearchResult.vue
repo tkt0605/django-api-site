@@ -2,10 +2,10 @@
     <div>
       <div v-if="error" class="error">{{ error }}</div>
   
-      <div v-if="books.length">
-        <ul>
-          <div>検索結果： "{{ query }}"</div>
-          <li v-for="book in books" :key="book.id">
+      <div class="resault" v-if="books.length">
+        <ul class='resalut-bar'>
+          <div class='query'>検索結果： "{{ query }}"</div>
+          <li class='books' v-for="book in books" :key="book.id">
             <router-link :to="{name: 'fetchBookDetail', params:{id: book.id}}">
                 <img 
                 :src="book.volumeInfo?.imageLinks?.thumbnail || book.volumeInfo?.imageLinks?.smallThumbnail" 
@@ -14,7 +14,7 @@
                 />
                 <strong>{{ book.volumeInfo.title }}</strong> by<em>{{ book.volumeInfo.authors?.join(', ') }}</em>
             </router-link>
-            <div v-if="isSuperUser">
+            <div class='add_button' v-if="isSuperUser">
                 <div v-if="!book.is_added">
                     <div class="stock-container">
                         <label for="stock">在庫数:</label>
@@ -29,7 +29,7 @@
       </div>
       <div v-else-if="!error">No books found for "{{ query }}".</div>
     </div>
-  </template>
+</template>
   
 <script>
 import { searchBooks } from '@/services/authService';
@@ -169,108 +169,140 @@ export default {
 </script>
   
 <style>
-/* General Styling */
+/* Main Container */
+.resault {
+  margin-top: 20px;
+  text-align: center;
+}
+
+/* Search Result Heading */
+.query {
+  font-size: 1.2em;
+  font-weight: bold;
+  color: #333;
+  margin-bottom: 15px;
+}
+
 /* Error Message */
 .error {
   color: #d9534f;
-  background-color: #f2dede;
-  padding: 10px;
-  border: 1px solid #ebccd1;
-  border-radius: 5px;
+  font-size: 1em;
   margin-bottom: 15px;
   text-align: center;
 }
 
-/* Search Result Text */
-div > div:first-child {
-  font-size: 1.2em;
-  font-weight: bold;
-  margin-bottom: 20px;
-  color: #333;
-}
-
-/* Book List */
-ul {
-  list-style: none;
+/* Result List */
+.resalut-bar {
+  list-style-type: none;
   padding: 0;
-}
-
-li {
   display: flex;
-  align-items: center;
-  padding: 15px;
-  background: #fff;
-  border: 1px solid #ddd;
+  flex-wrap: wrap;
+  gap: 15px;
+  justify-content: center;
+}
+
+/* Individual Book Item */
+.books {
+  background-color: #fff;
   border-radius: 8px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  margin-bottom: 15px;
-  transition: transform 0.2s;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  padding: 15px;
+  width: 200px;
+  text-align: center;
+  transition: transform 0.3s;
 }
 
-li:hover {
-  transform: translateY(-5px);
+.books:hover {
+  transform: scale(1.05);
 }
 
-/* Book Cover */
+/* Book Cover Image */
 .book-cover {
-  width: 60px;
-  height: 90px;
-  border-radius: 4px;
-  margin-right: 15px;
+  width: 100px;
+  height: 150px;
+  border-radius: 5px;
+  margin-bottom: 10px;
 }
 
 /* Book Title and Author */
-strong {
+.books strong {
   font-size: 1.1em;
   color: #333;
+  display: block;
+  margin: 8px 0;
 }
 
-em {
+.books em {
   font-size: 0.9em;
-  color: #777;
+  color: #666;
+  display: block;
+  margin-bottom: 10px;
 }
 
-/* Stock Input and Button Container */
-.stock-container {
-  display: flex;
-  align-items: center;
+/* Add Button Container */
+.add_button {
   margin-top: 10px;
+}
+
+/* Stock Input Container */
+.stock-container {
+  margin-bottom: 10px;
+  text-align: left;
+}
+
+.stock-container label {
+  font-size: 0.9em;
+  font-weight: bold;
+  color: #666;
+  margin-right: 5px;
 }
 
 .stock-input {
   width: 60px;
   padding: 5px;
-  margin-left: 10px;
-  border: 1px solid #ccc;
-  border-radius: 4px;
-  font-size: 0.9em;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  text-align: center;
 }
 
-/* Add Book Button */
-.add_button {
-  padding: 8px 12px;
-  margin-top: 10px;
-  background-color: #5cb85c;
+/* Add Button */
+.add_button button {
+  background-color: #4a90e2;
   border: none;
-  border-radius: 4px;
+  border-radius: 5px;
   color: #fff;
   font-weight: bold;
   cursor: pointer;
+  padding: 8px 12px;
   transition: background-color 0.3s;
 }
 
-.add_button:hover {
-  background-color: #4cae4c;
+.add_button button:hover {
+  background-color: #357ab9;
 }
 
 /* Already Added Button */
 .always-btn {
-  background-color: #0275d8;
-  cursor: default;
+  background-color: #c0c0c0;
+  border: none;
+  border-radius: 5px;
+  color: #fff;
+  font-weight: bold;
+  padding: 8px 12px;
+  cursor: not-allowed;
 }
 
-.always-btn:hover {
-  background-color: #0275d8;
+/* Responsive Adjustments */
+@media (max-width: 480px) {
+  .books {
+    width: 100%;
+    margin-bottom: 15px;
+  }
+
+  .book-cover {
+    width: 80px;
+    height: 120px;
+  }
 }
 
 </style>

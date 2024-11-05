@@ -2,9 +2,10 @@
   <div>
     <h2>Login</h2>
     <form @submit.prevent="handleLogin">
-      <input v-model="email" placeholder="Email" type="email" />
-      <input v-model="password" placeholder="Password" type="password" />
+      <input class='email' v-model="email" placeholder="Email" type="email" />
+      <input class='password' v-model="password" placeholder="Password" type="password" />
       <button type="submit">Login</button>
+      <p>アカウントをお持ちでは無ければ<router-link>サインアップ</router-link>してください。</p>
     </form>
     <p v-if="errorMessage">{{ errorMessage }}</p>
   </div>
@@ -26,14 +27,6 @@ export default {
     ...mapActions(['login']),
   },
   methods: {
-    // async handleLogin() {
-    //   try {
-    //     await this.login({ email: this.email, password: this.password });
-    //     this.$router.push('/'); // ログイン後にホームページへリダイレクト
-    //   } catch (error) {
-    //     this.errorMessage = 'Failed to login. Please check your credentials.';
-    //   }
-    // },
     async handleLogin() {
     try {
       // ログインを試みる

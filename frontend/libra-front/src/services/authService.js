@@ -151,12 +151,17 @@ export async function fetchUserWithAuth() {
     });
     return response.data;
   } catch (error) {
+    // if (error.response && error.response.status === 401) {
+    //   // アクセストークンが無効だった場合、リフレッシュを試みる
+    //   token = await refreshToken();
+    //   if (token) {
+    //     return await fetchUserWithAuth();  // 新しいトークンで再リクエスト
+    //   }
+    // }
     if (error.response && error.response.status === 401) {
-      // アクセストークンが無効だった場合、リフレッシュを試みる
-      token = await refreshToken();
-      if (token) {
-        return await fetchUserWithAuth();  // 新しいトークンで再リクエスト
-      }
+      console.error("認証エラーが発生しました。再ログインが必要です。");
+      // 例: ログインページへのリダイレクト
+      router.push({ name: 'Login' });
     }
     throw error;
   }

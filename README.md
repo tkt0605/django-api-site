@@ -21,9 +21,8 @@
 
 ## 開発環境のセットアップ (Docker 使用)
 0. Ubuntuをセットアップ。
-　```powershell
+　```bash
     wsl --install
-
   ```
 1. リポジトリをクローンします。
 

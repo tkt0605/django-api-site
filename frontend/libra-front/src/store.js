@@ -2,7 +2,6 @@
 import { createStore } from 'vuex';
 import { register, login, logout, fetchUser } from '@/services/authService';
 import axios from 'axios';
-
 const store = createStore({
   state: {
     user: null,
@@ -88,6 +87,21 @@ const store = createStore({
     isAuthenticated: (state) => state.isAuthenticated,
   }
 });
-
-export default store;
+export default {
+  store,
+  state: {
+    authToken: null,
+  },
+  mutations: {
+    setAuthToken(state, token) {
+      state.authToken = token; // トークンを保存
+    }
+  },
+  actions: {
+    login({ commit }, token) {
+      commit('setAuthToken', token); // ログイン時にトークンを保存
+    }
+  }
+};
+// export default store;
 // store.js

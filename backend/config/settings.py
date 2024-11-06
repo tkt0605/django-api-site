@@ -90,9 +90,6 @@ REST_FRAMEWORK = {
 REST_AUTH_SERIALIZERS = {
     'USER_DETAILS_SERIALIZER': 'libra.serializers.CustomUserDetairlsSerializer',
 }
-
-
-
 SIMPLE_JWT = {
     'AUTH_HEADER_TYPES': ('Bearer',),
     'ROTATE_REFRESH_TOKENS': True,

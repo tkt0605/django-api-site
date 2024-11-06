@@ -20,7 +20,11 @@
 - コンテナ管理: Docker
 
 ## 開発環境のセットアップ (Docker 使用)
+0. Ubuntuをセットアップ。
+　```powershell
+    wsl --install
 
+  ```
 1. リポジトリをクローンします。
 
     ```bash

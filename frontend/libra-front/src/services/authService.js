@@ -1,4 +1,5 @@
 import axios from "axios";
+import store from "@/store"
 // const API_URL = 'http://localhost:8000/api/auth/';
 // export async function refreshToken() {
 //   const refreshToken = localStorage.getItem('refresh_token');
@@ -98,40 +99,69 @@ export async function logout() {
 }
 
 
+// export async function fetchUser() {
+//   const token = localStorage.getItem('token'); // ログイン時に保存したJWTトークンを取得
+//   try {
+//       const response = await axios.get('http://localhost:8000/api/accounts/profile/', {
+//           headers: {
+//               Authorization: `Bearer ${token}`,
+//           },
+//           withCredentials: true,
+//       });
+//       console.log("fetchUser response: ", response.data);
+//       return response.data;
+//   } catch (error) {
+//       console.error("ユーザー情報の取得に失敗しました:", error);
+//       throw error;
+//   }
+// }
 export async function fetchUser() {
-  const token = localStorage.getItem('token'); // ログイン時に保存したJWTトークンを取得
   try {
-      const response = await axios.get('http://localhost:8000/api/accounts/profile/', {
-          headers: {
-              Authorization: `Bearer ${token}`,
-          },
-          withCredentials: true,
-      });
-      console.log("fetchUser response: ", response.data);
-      return response.data;
+    const response = await axios.get("http://localhost:8000/api/accounts/profile/", {
+      headers: {
+        Authorization: `Bearer ${store.state.authToken}`
+      }
+    });
+    return response.data;
   } catch (error) {
-      console.error("ユーザー情報の取得に失敗しました:", error);
-      throw error;
+    if (error.response && error.response.status === 401) {
+      console.log("認証エラー: トークンをリフレッシュします。");
+      await refreshToken(); // リフレッシュ関数の呼び出し
+      return fetchUser();   // リフレッシュ後に再リクエスト
+    } else {
+      console.error("Fetch User Error:", error);
+    }
   }
 }
 
-
+// export async function refreshToken() {
+//   const refreshToken = localStorage.getItem('refresh_token');  // リフレッシュトークンを取得
+//   if (refreshToken) {
+//     try {
+//       const response = await axios.post('http://localhost:8000/api/accounts/token/refresh/', {
+//         refresh: refreshToken
+//       });
+//       const newAccessToken = response.data.access;
+//       localStorage.setItem('token', newAccessToken);  // 新しいアクセストークンを保存
+//       return newAccessToken;
+//     } catch (error) {
+//       console.error("Token refresh failed:", error);
+//       return null;
+//     }
+//   }
+//   return null;
+// }
 export async function refreshToken() {
-  const refreshToken = localStorage.getItem('refresh_token');  // リフレッシュトークンを取得
-  if (refreshToken) {
-    try {
-      const response = await axios.post('http://localhost:8000/api/accounts/token/refresh/', {
-        refresh: refreshToken
-      });
-      const newAccessToken = response.data.access;
-      localStorage.setItem('token', newAccessToken);  // 新しいアクセストークンを保存
-      return newAccessToken;
-    } catch (error) {
-      console.error("Token refresh failed:", error);
-      return null;
-    }
+  const refreshToken = store.state.refreshToken; // リフレッシュトークンを取得
+  try {
+    const response = await axios.post("http://localhost:8000/api/accounts/token/refresh/", {
+      refresh: refreshToken
+    });
+    store.commit('setAuthToken', response.data.access); // 新しいアクセストークンを保存
+  } catch (error) {
+    console.error("トークンのリフレッシュに失敗しました。再ログインが必要です。");
+    router.push("http://localhost:8080/accounts/login");
   }
-  return null;
 }
 
 // 認証付きでユーザー情報を取得
@@ -161,7 +191,8 @@ export async function fetchUserWithAuth() {
     if (error.response && error.response.status === 401) {
       console.error("認証エラーが発生しました。再ログインが必要です。");
       // 例: ログインページへのリダイレクト
-      router.push({ name: 'Login' });
+      // router.push();
+      this.$router.push("/accounts/login");
     }
     throw error;
   }
